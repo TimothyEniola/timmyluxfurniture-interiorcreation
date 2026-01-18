@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -25,22 +24,11 @@ import {
   XCircle,
   Upload,
   Image as ImageIcon,
-  Trash2,
 } from "lucide-react";
 import { useProducts } from "../context/ProductContext";
-import { useAuth } from "../context/AuthContext";
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const { isAdmin } = useAuth();
-  const { products, addProduct, deleteProduct } = useProducts();
-
-  // Check if user is admin
-  useEffect(() => {
-    if (!isAdmin()) {
-      navigate("/signin");
-    }
-  }, [isAdmin, navigate]);
+  const { addProduct } = useProducts();
   const [orders, setOrders] = useState([
     {
       id: 1,
@@ -122,8 +110,8 @@ export default function AdminDashboard() {
 
   // Data for charts
   const orderStatusData = [
-    { name: "Pending", value: pendingOrders, color: "#fbbf24" },
-    { name: "Delivered", value: deliveredOrders, color: "#D4AF37" },
+    { name: "Pending", value: pendingOrders, color: "#D4AF37" },
+    { name: "Delivered", value: deliveredOrders, color: "#011F5B" },
     {
       name: "Cancelled",
       value: orders.filter((o) => o.status === "Cancelled").length,
@@ -202,14 +190,6 @@ export default function AdminDashboard() {
     setImagePreview(null);
   };
 
-  const handleDeleteProduct = (productId, productName) => {
-    if (window.confirm(`Are you sure you want to delete "${productName}"?`)) {
-      deleteProduct(productId);
-      setSuccessMessage(`Product "${productName}" deleted successfully!`);
-      setTimeout(() => setSuccessMessage(""), 3000);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container-custom py-8">
@@ -231,43 +211,43 @@ export default function AdminDashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#fbbf24]">
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#D4AF37]">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-600 text-sm font-medium">Total Sales</h3>
-              <DollarSign className="text-[#fbbf24]" size={24} />
+              <DollarSign className="text-[#D4AF37]" size={24} />
             </div>
-            <p className="text-3xl font-bold text-[#D4AF37]">
+            <p className="text-3xl font-bold text-[#011F5B]">
               ₦{(totalSales / 1000000).toFixed(1)}M
             </p>
             <p className="text-xs text-green-600 mt-1">+12.5% from last month</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#D4AF37]">
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#011F5B]">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-600 text-sm font-medium">Total Orders</h3>
-              <Package className="text-[#D4AF37]" size={24} />
+              <Package className="text-[#011F5B]" size={24} />
             </div>
-            <p className="text-3xl font-bold text-[#D4AF37]">{totalOrders}</p>
+            <p className="text-3xl font-bold text-[#011F5B]">{totalOrders}</p>
             <p className="text-xs text-green-600 mt-1">+8% from last month</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#fbbf24]">
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-600 text-sm font-medium">
                 Pending Orders
               </h3>
-              <Clock className="text-[#fbbf24]" size={24} />
+              <Clock className="text-yellow-500" size={24} />
             </div>
-            <p className="text-3xl font-bold text-[#D4AF37]">{pendingOrders}</p>
+            <p className="text-3xl font-bold text-[#011F5B]">{pendingOrders}</p>
             <p className="text-xs text-gray-500 mt-1">Awaiting delivery</p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#D4AF37]">
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-gray-600 text-sm font-medium">Delivered</h3>
-              <CheckCircle className="text-[#D4AF37]" size={24} />
+              <CheckCircle className="text-green-500" size={24} />
             </div>
-            <p className="text-3xl font-bold text-[#D4AF37]">
+            <p className="text-3xl font-bold text-[#011F5B]">
               {deliveredOrders}
             </p>
             <p className="text-xs text-gray-500 mt-1">Successfully completed</p>
@@ -278,7 +258,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Order Status Pie Chart */}
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-[#D4AF37] mb-6">
+            <h2 className="text-xl font-bold text-[#011F5B] mb-6">
               Order Status Distribution
             </h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -304,7 +284,7 @@ export default function AdminDashboard() {
 
           {/* Sales Trend Line Chart */}
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-[#D4AF37] mb-6">
+            <h2 className="text-xl font-bold text-[#011F5B] mb-6">
               Sales Trend (6 Months)
             </h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -513,86 +493,10 @@ export default function AdminDashboard() {
           </form>
         </div>
 
-        {/* Products Management Table */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-[#D4AF37]">Manage Products</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Image
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Product Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Featured
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                      {product.name}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {product.category}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#D4AF37]">
-                      ₦{product.price.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {product.featured ? (
-                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                          No
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={() => handleDeleteProduct(product.id, product.name)}
-                        className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1"
-                        title="Delete product"
-                      >
-                        <Trash2 size={18} />
-                        <span className="text-sm font-medium">Delete</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* Orders Table */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-[#D4AF37]">Recent Orders</h2>
+            <h2 className="text-xl font-bold text-[#011F5B]">Recent Orders</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">

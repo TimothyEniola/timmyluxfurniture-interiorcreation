@@ -1,179 +1,314 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { Truck, Award, HeadphonesIcon, ShieldCheck } from "lucide-react";
+import { Package, CreditCard, Headphones, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useProducts } from "../context/ProductContext";
+import { useState } from "react";
 
 export default function Home() {
   const { products } = useProducts();
   const featuredProducts = products.filter((p) => p.featured);
+  const [activeTab, setActiveTab] = useState("all");
+
+  // Filter products based on active tab
+  const getFilteredProducts = () => {
+    switch (activeTab) {
+      case "latest":
+        return products.slice(-6);
+      case "bestsellers":
+        return products.filter(p => p.featured).slice(0, 6);
+      case "featured":
+        return featuredProducts.slice(0, 6);
+      default:
+        return products.slice(0, 6);
+    }
+  };
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#011F5B] via-[#023381] to-[#36454F] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] bg-repeat"></div>
-        </div>
-        
-        <div className="container-custom py-20 md:py-32 relative z-10">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Luxury Furniture
-              <span className="block text-[#D4AF37]">Crafted for You</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
-              Transform your space with premium furniture designed for comfort,
-              style, and timeless elegance.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/products" className="btn-secondary text-center">
-                Shop Now
-              </Link>
-              <Link
-                to="/products"
-                className="border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-[#011F5B] transition-all duration-300 text-center"
-              >
-                Browse Collection
-              </Link>
+      <section className="bg-gradient-to-br from-gray-50 to-white py-12 md:py-20">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Left Content */}
+            <div>
+              <div className="inline-block bg-[#D4AF37] text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                The Best Online Furniture Store
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Explore Our Modern<br />
+                Furniture Collection
+              </h1>
+              <p className="text-gray-600 text-lg mb-8 max-w-md">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Sed do eiusmod tempor incididunt ut labore et dolore.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <Link to="/products" className="btn-primary text-center inline-flex items-center justify-center">
+                  Shop Now →
+                </Link>
+                <Link to="/products" className="btn-outline text-center">
+                  View All Products
+                </Link>
+              </div>
+
+              {/* Ratings Display */}
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-2">
+                  <img src="https://i.pravatar.cc/40?u=user1" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
+                  <img src="https://i.pravatar.cc/40?u=user2" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
+                  <img src="https://i.pravatar.cc/40?u=user3" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
+                  <img src="https://i.pravatar.cc/40?u=user4" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1 text-[#fbbf24]">
+                    <Star size={18} fill="#fbbf24" />
+                    <span className="font-bold text-gray-900">4.9 Ratings+</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Trusted by 500+ Customers</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content - Room Showcases */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative group overflow-hidden rounded-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1759691555105-17e609a3e46f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw3fHxNb2Rlcm4lMjBsaXZpbmclMjByb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwc29mYSUyMGFuZCUyMGZ1cm5pdHVyZSUyMG1vZGVybnxlbnwwfDB8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85"
+                  alt="Living Room" 
+                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                  <h3 className="text-white font-bold text-lg">Living Room</h3>
+                  <p className="text-white/90 text-sm">2,500+ Items</p>
+                </div>
+                <button className="absolute bottom-4 right-4 w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
+                  →
+                </button>
+              </div>
+
+              <div className="relative group overflow-hidden rounded-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1750420556288-d0e32a6f517b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw4fHxDb250ZW1wb3JhcnklMjBiZWRyb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwYmVkJTIwbW9kZXJufGVufDB8MHx8fDE3Njg3NDc0MjV8MA&ixlib=rb-4.1.0&q=85"
+                  alt="Bed Room" 
+                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                  <h3 className="text-white font-bold text-lg">Bed Room</h3>
+                  <p className="text-white/90 text-sm">1,500+ Items</p>
+                </div>
+                <button className="absolute bottom-4 right-4 w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
+                  →
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="col-span-2 flex items-center justify-center gap-4">
+                <button className="w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
+                  <ChevronLeft size={24} />
+                </button>
+                <button className="w-12 h-12 bg-[#fbbf24] rounded-full flex items-center justify-center text-white hover:bg-[#f59e0b] transition-colors">
+                  <ChevronRight size={24} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-[#fbbf24] rounded-full flex items-center justify-center">
+                  <Package className="text-white" size={24} />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-1 text-gray-900">
+                  Free Shipping
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Free shipping for order above $180
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-[#fbbf24] rounded-full flex items-center justify-center">
+                  <CreditCard className="text-white" size={24} />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-1 text-gray-900">
+                  Flexible Payment
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Multiple secure payment options
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-[#fbbf24] rounded-full flex items-center justify-center">
+                  <Headphones className="text-white" size={24} />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-1 text-gray-900">
+                  24×7 Support
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  We support online all days
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Section */}
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#D4AF37] rounded-full mb-4">
-                <Award className="text-[#011F5B]" size={32} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Chairs Category */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">1500+ Items</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Chairs</h3>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                    <li>Lounge Chair</li>
+                    <li>Reading Chair</li>
+                    <li>Dining Chair</li>
+                    <li>Office Chair</li>
+                    <li>Armchair</li>
+                    <li>Bar Stool</li>
+                    <li>Club Chair</li>
+                  </ul>
+                </div>
+                <img 
+                  src="https://images.pexels.com/photos/7614546/pexels-photo-7614546.jpeg"
+                  alt="Chair" 
+                  className="w-32 h-40 object-cover rounded-lg"
+                />
               </div>
-              <h3 className="font-bold text-lg mb-2 text-[#011F5B]">
-                Premium Quality
-              </h3>
-              <p className="text-gray-600">
-                Finest materials and expert craftsmanship
-              </p>
             </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#D4AF37] rounded-full mb-4">
-                <Truck className="text-[#011F5B]" size={32} />
+
+            {/* Sofa Category */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">750+ Items</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Sofa</h3>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li>Reclining Sofa</li>
+                    <li>Sectional Sofa</li>
+                    <li>Armless Sofa</li>
+                    <li>Curved Sofa</li>
+                  </ul>
+                </div>
+                <img 
+                  src="https://images.pexels.com/photos/15253321/pexels-photo-15253321.jpeg"
+                  alt="Sofa" 
+                  className="w-32 h-40 object-cover rounded-lg"
+                />
               </div>
-              <h3 className="font-bold text-lg mb-2 text-[#011F5B]">
-                Fast Delivery
-              </h3>
-              <p className="text-gray-600">
-                Swift and reliable delivery service
-              </p>
             </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#D4AF37] rounded-full mb-4">
-                <ShieldCheck className="text-[#011F5B]" size={32} />
+
+            {/* Lighting Category */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">450+ Items</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Lighting</h3>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li>Table Lights</li>
+                    <li>Floor Lights</li>
+                    <li>Ceiling Lights</li>
+                    <li>Wall Lights</li>
+                  </ul>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1758983304673-5a2d091e43e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwyNXx8TW9kZXJuJTIwcGVuZGFudCUyMGxhbXAlMjBjb3BwZXIlMjBoYW5naW5nJTIwbGlnaHQlMjBsaWdodGluZ3xlbnwwfDF8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85"
+                  alt="Lighting" 
+                  className="w-32 h-40 object-cover rounded-lg"
+                />
               </div>
-              <h3 className="font-bold text-lg mb-2 text-[#011F5B]">
-                Warranty
-              </h3>
-              <p className="text-gray-600">
-                2-year warranty on all products
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#D4AF37] rounded-full mb-4">
-                <HeadphonesIcon className="text-[#011F5B]" size={32} />
-              </div>
-              <h3 className="font-bold text-lg mb-2 text-[#011F5B]">
-                24/7 Support
-              </h3>
-              <p className="text-gray-600">
-                Always here to help you
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-16">
+      {/* Products Section */}
+      <section className="py-16 bg-white">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="section-heading">Featured Collection</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Discover our handpicked selection of premium furniture pieces
-            </p>
+          <div className="text-center mb-8">
+            <p className="text-gray-600 mb-2">Our Products</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              Our Products Collections
+            </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+
+          {/* Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                activeTab === "all"
+                  ? "bg-[#D4AF37] text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              All Products
+            </button>
+            <button
+              onClick={() => setActiveTab("latest")}
+              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                activeTab === "latest"
+                  ? "bg-[#D4AF37] text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Latest Products
+            </button>
+            <button
+              onClick={() => setActiveTab("bestsellers")}
+              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                activeTab === "bestsellers"
+                  ? "bg-[#D4AF37] text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Best Sellers
+            </button>
+            <button
+              onClick={() => setActiveTab("featured")}
+              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                activeTab === "featured"
+                  ? "bg-[#D4AF37] text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Featured Products
+            </button>
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {getFilteredProducts().map((product) => (
+              <ProductCard key={product.id} product={product} showDiscount />
             ))}
           </div>
-          <div className="text-center mt-12">
-            <Link to="/products" className="btn-primary">
-              View All Products
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-16 bg-[#011F5B] text-white">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">
-                Why Choose Timmy Luxe?
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-[#D4AF37] rounded-full flex items-center justify-center font-bold text-[#011F5B]">
-                    1
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-1">
-                      Custom Design Solutions
-                    </h4>
-                    <p className="text-gray-300">
-                      We create furniture tailored to your unique style and
-                      space requirements.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-[#D4AF37] rounded-full flex items-center justify-center font-bold text-[#011F5B]">
-                    2
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-1">
-                      Premium Materials
-                    </h4>
-                    <p className="text-gray-300">
-                      Only the finest wood, fabrics, and materials are used in
-                      our furniture.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-[#D4AF37] rounded-full flex items-center justify-center font-bold text-[#011F5B]">
-                    3
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-1">
-                      Expert Craftsmanship
-                    </h4>
-                    <p className="text-gray-300">
-                      Every piece is crafted with precision and attention to
-                      detail.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <img
-                src="https://images.pexels.com/photos/8135267/pexels-photo-8135267.jpeg"
-                alt="Luxury Living Room"
-                className="rounded-xl shadow-2xl"
-              />
-            </div>
+          <div className="text-center mt-12">
+            <Link to="/products" className="btn-outline">
+              View All Products →
+            </Link>
           </div>
         </div>
       </section>

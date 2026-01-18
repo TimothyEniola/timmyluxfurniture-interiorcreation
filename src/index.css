@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#011F5B] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-[#023381] hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-[#D4AF37] text-[#011F5B] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-[#C49B2E] hover:shadow-lg;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-bold text-[#011F5B] mb-4;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
