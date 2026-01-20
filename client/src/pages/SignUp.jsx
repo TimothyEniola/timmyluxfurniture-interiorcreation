@@ -140,16 +140,16 @@ export default function SignUp() {
             <div className="flex items-start gap-2">
               <input
                 type="checkbox"
-                className="w-4 h-4 mt-1 text-[#1a5f3a] border-gray-300 rounded focus:ring-[#1a5f3a]"
+                className="w-4 h-4 mt-1 text-[#D4AF37] border-gray-300 rounded focus:ring-[#1a5f3a]"
                 required
               />
               <span className="text-sm text-gray-600">
                 I agree to the{" "}
-                <a href="#" className="text-[#1a5f3a] hover:underline font-medium">
+                <a href="#" className="text-[#D4AF37] hover:underline font-medium">
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="#" className="text-[#1a5f3a] hover:underline font-medium">
+                <a href="#" className="text-[#D4AF37] hover:underline font-medium">
                   Privacy Policy
                 </a>
               </span>
@@ -163,7 +163,7 @@ export default function SignUp() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link to="/signin" className="text-[#1a5f3a] hover:underline font-semibold">
+              <Link to="/signin" className="text-[#D4AF37] hover:underline font-semibold">
                 Sign in
               </Link>
             </p>

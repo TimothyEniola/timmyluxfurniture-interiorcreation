@@ -33,7 +33,7 @@ import { useAuth } from "../context/AuthContext";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
-  const { products, addProduct, deleteProduct } = useProducts();
+  const { products, addProduct, toggleAvailability, deleteProduct } = useProducts();
 
   // Check if user is admin
   useEffect(() => {
@@ -202,8 +202,16 @@ export default function AdminDashboard() {
     setImagePreview(null);
   };
 
+  const handleToggleAvailability = (productId, productName) => {
+    toggleAvailability(productId);
+    const product = products.find(p => p.id === productId);
+    const newStatus = product.available ? 'unavailable' : 'available';
+    setSuccessMessage(`Product "${productName}" marked as ${newStatus}!`);
+    setTimeout(() => setSuccessMessage(""), 3000);
+  };
+
   const handleDeleteProduct = (productId, productName) => {
-    if (window.confirm(`Are you sure you want to delete "${productName}"?`)) {
+    if (window.confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
       deleteProduct(productId);
       setSuccessMessage(`Product "${productName}" deleted successfully!`);
       setTimeout(() => setSuccessMessage(""), 3000);
@@ -239,7 +247,7 @@ export default function AdminDashboard() {
             <p className="text-3xl font-bold text-[#D4AF37]">
               ₦{(totalSales / 1000000).toFixed(1)}M
             </p>
-            <p className="text-xs text-green-600 mt-1">+12.5% from last month</p>
+            <p className="text-xs text-gray-600 mt-1">+12.5% from last month</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#D4AF37]">
@@ -248,7 +256,7 @@ export default function AdminDashboard() {
               <Package className="text-[#D4AF37]" size={24} />
             </div>
             <p className="text-3xl font-bold text-[#D4AF37]">{totalOrders}</p>
-            <p className="text-xs text-green-600 mt-1">+8% from last month</p>
+            <p className="text-xs  mt-1">+8% from last month</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#fbbf24]">
@@ -504,7 +512,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <button type="submit" className="btn-secondary w-full">
+            <button type="submit" className="btn-secondary w-full text-white">
               <span className="flex items-center justify-center gap-2">
                 <Package size={20} />
                 Add Product to Store
@@ -535,7 +543,7 @@ export default function AdminDashboard() {
                     Price
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Featured
+                    Availability
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Actions
@@ -562,25 +570,37 @@ export default function AdminDashboard() {
                       ₦{product.price.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {product.featured ? (
+                      {product.available ? (
                         <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Yes
+                          Available
                         </span>
                       ) : (
-                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                          No
+                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                          Unavailable
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={() => handleDeleteProduct(product.id, product.name)}
-                        className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1"
-                        title="Delete product"
-                      >
-                        <Trash2 size={18} />
-                        <span className="text-sm font-medium">Delete</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleToggleAvailability(product.id, product.name)}
+                          className={`text-sm font-medium px-3 py-1 rounded transition-colors ${
+                            product.available
+                              ? 'text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100'
+                              : 'text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100'
+                          }`}
+                          title={product.available ? "Mark as unavailable" : "Mark as available"}
+                        >
+                          {product.available ? "Mark Unavailable" : "Mark Available"}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(product.id, product.name)}
+                          className="text-red-600 hover:text-red-800 transition-colors p-2 rounded hover:bg-red-50"
+                          title="Delete product"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

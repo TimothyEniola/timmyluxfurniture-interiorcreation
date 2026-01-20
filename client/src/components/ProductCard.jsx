@@ -1,9 +1,11 @@
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ProductCard({ product, showDiscount = false }) {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [timeLeft, setTimeLeft] = useState({ days: 5, hours: 12, minutes: 30, seconds: 25 });
 
   // Mock countdown timer
@@ -32,6 +34,14 @@ export default function ProductCard({ product, showDiscount = false }) {
     addToCart(product);
   };
 
+  const handleWishlistToggle = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   // Calculate discount (mock - 10% for featured items)
   const discountPercentage = product.featured ? 10 : 0;
 
@@ -51,10 +61,22 @@ export default function ProductCard({ product, showDiscount = false }) {
           </span>
         )}
 
+        {/* Availability Badge */}
+        {product.available === false && (
+          <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+            Out of Stock
+          </span>
+        )}
+
         {/* Quick Action Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-colors shadow-md">
-            <Heart size={18} />
+          <button
+            onClick={handleWishlistToggle}
+            className={`w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-colors shadow-md ${
+              isInWishlist(product.id) ? 'text-red-500' : ''
+            }`}
+          >
+            <Heart size={18} className={isInWishlist(product.id) ? 'fill-current' : ''} />
           </button>
           <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-[#D4AF37] hover:text-white transition-colors shadow-md">
             <Eye size={18} />
@@ -123,7 +145,12 @@ export default function ProductCard({ product, showDiscount = false }) {
           </div>
           <button
             onClick={handleAddToCart}
-            className="bg-[#D4AF37] text-white p-3 rounded-lg hover:bg-[#b8942a] transition-all duration-300 hover:shadow-lg"
+            disabled={product.available === false}
+            className={`p-3 rounded-lg transition-all duration-300 hover:shadow-lg ${
+              product.available === false
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                : 'bg-[#D4AF37] text-white hover:bg-[#b8942a]'
+            }`}
             aria-label="Add to cart"
           >
             <ShoppingCart size={18} />

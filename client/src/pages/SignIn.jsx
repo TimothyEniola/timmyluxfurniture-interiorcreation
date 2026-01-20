@@ -60,7 +60,7 @@ export default function SignIn() {
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Hint: Use admin@timmylux.com / admin123 for admin access
+                {/* Hint: Use admin@timmylux.com / admin123 for admin access */}
               </p>
             </div>
 
@@ -92,11 +92,11 @@ export default function SignIn() {
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-[#1a5f3a] border-gray-300 rounded focus:ring-[#1a5f3a]"
+                  className="w-4 h-4 text-[#D4AF37] border-gray-300 rounded focus:ring-[#1a5f3a]"
                 />
                 <span className="text-sm text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-sm text-[#1a5f3a] hover:underline font-medium">
+              <a href="#" className="text-sm text-[#D4AF37] hover:underline font-medium">
                 Forgot password?
               </a>
             </div>
@@ -109,7 +109,7 @@ export default function SignIn() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-[#1a5f3a] hover:underline font-semibold">
+              <Link to="/signup" className="text-[#D4AF37] hover:underline font-semibold">
                 Sign up
               </Link>
             </p>

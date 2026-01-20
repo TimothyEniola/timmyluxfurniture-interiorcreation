@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, CreditCard, Truck } from "lucide-react";
+import { usePaystack } from "../hooks/usePaystack";
 
 export default function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
+  const { initializePayment } = usePaystack();
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("paystack");
+  const [completedPaymentMethod, setCompletedPaymentMethod] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -18,12 +23,63 @@ export default function Checkout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate order placement
+
+    // Validate required fields
+    if (!formData.fullName || !formData.phone || !formData.address || !formData.city || !formData.state) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    if (paymentMethod === "paystack" && !formData.email) {
+      alert("Email is required for Paystack payment");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    if (paymentMethod === "paystack") {
+      // Handle Paystack payment
+      initializePayment({
+        email: formData.email,
+        amount: getCartTotal(),
+        customerName: formData.fullName,
+        phone: formData.phone,
+        onSuccess: handlePaystackSuccess,
+        onClose: handlePaystackClose,
+      });
+    } else if (paymentMethod === "cod") {
+      // Handle Cash on Delivery
+      handleCashOnDelivery();
+    }
+  };
+
+  const handleCashOnDelivery = () => {
+    // Simulate order placement for COD
+    setCompletedPaymentMethod("Cash on Delivery");
+    setOrderPlaced(true);
+    setIsProcessing(false);
+    setTimeout(() => {
+      clearCart();
+      navigate("/");
+    }, 3000);
+  };
+
+  const handlePaystackSuccess = (reference) => {
+    // Handle successful payment
+    console.log("Payment successful:", reference);
+    setIsProcessing(false);
+    setCompletedPaymentMethod("Paystack");
     setOrderPlaced(true);
     setTimeout(() => {
       clearCart();
       navigate("/");
     }, 3000);
+  };
+
+  const handlePaystackClose = () => {
+    // Handle payment modal close
+    console.log("Payment modal closed");
+    setIsProcessing(false);
   };
 
   const handleChange = (e) => {
@@ -49,6 +105,11 @@ export default function Checkout() {
           <p className="text-gray-600 mb-4">
             Thank you for your purchase. We'll contact you shortly.
           </p>
+          {completedPaymentMethod && (
+            <p className="text-sm text-[#D4AF37] font-semibold mb-2">
+              Payment Method: {completedPaymentMethod}
+            </p>
+          )}
           <p className="text-sm text-gray-500">Redirecting to home...</p>
         </div>
       </div>
@@ -97,7 +158,7 @@ export default function Checkout() {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address
+                  Email Address {paymentMethod === "paystack" ? "*" : ""}
                 </label>
                 <input
                   type="email"
@@ -106,7 +167,13 @@ export default function Checkout() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                   placeholder="john@example.com"
+                  required={paymentMethod === "paystack"}
                 />
+                {paymentMethod === "paystack" && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Required for secure payment processing
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -152,8 +219,60 @@ export default function Checkout() {
                   />
                 </div>
               </div>
-              <button type="submit" className="btn-secondary w-full mt-6">
-                Place Order
+
+              {/* Payment Method Selection */}
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-[#011F5B] mb-4">
+                  Payment Method
+                </h3>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 p-4 border border-gray-300 rounded-lg cursor-pointer hover:border-[#D4AF37] transition-colors">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="paystack"
+                      checked={paymentMethod === "paystack"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-4 h-4 text-[#D4AF37] border-gray-300 focus:ring-[#D4AF37]"
+                    />
+                    <CreditCard className="text-[#D4AF37]" size={20} />
+                    <div>
+                      <p className="font-semibold text-gray-900">Pay with Card</p>
+                      <p className="text-sm text-gray-600">Secure payment via Paystack</p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-4 border border-gray-300 rounded-lg cursor-pointer hover:border-[#D4AF37] transition-colors">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked={paymentMethod === "cod"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-4 h-4 text-[#D4AF37] border-gray-300 focus:ring-[#D4AF37]"
+                    />
+                    <Truck className="text-[#D4AF37]" size={20} />
+                    <div>
+                      <p className="font-semibold text-gray-900">Cash on Delivery</p>
+                      <p className="text-sm text-gray-600">Pay when you receive your order</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isProcessing}
+                className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isProcessing ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Processing...
+                  </span>
+                ) : (
+                  paymentMethod === "paystack" ? "Pay Now with Paystack" : "Place Order (Cash on Delivery)"
+                )}
               </button>
             </form>
           </div>
