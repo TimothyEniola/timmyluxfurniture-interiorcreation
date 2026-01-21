@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { Package, CreditCard, Headphones, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import {
+  Package,
+  CreditCard,
+  Headphones,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+} from "lucide-react";
 import { useProducts } from "../context/ProductContext";
 import { useState, useEffect } from "react";
 
@@ -12,15 +19,17 @@ export default function Home() {
 
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1759691555105-17e609a3e46f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw3fHxNb2Rlcm4lMjBsaXZpbmclMjByb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwc29mYSUyMGFuZCUyMGZ1cm5pdHVyZSUyMG1vZGVybnxlbnwwfDB8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85",
+      image:
+        "https://images.unsplash.com/photo-1759691555105-17e609a3e46f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw3fHxNb2Rlcm4lMjBsaXZpbmclMjByb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwc29mYSUyMGFuZCUyMGZ1cm5pdHVyZSUyMG1vZGVybnxlbnwwfDB8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85",
       title: "Living Room",
-      items: "2,500+ Items"
+      items: "2,500+ Items",
     },
     {
-      image: "https://images.unsplash.com/photo-1750420556288-d0e32a6f517b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw4fHxDb250ZW1wb3JhcnklMjBiZWRyb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwYmVkJTIwbW9kZXJufGVufDB8MHx8fDE3Njg3NDc0MjV8MA&ixlib=rb-4.1.0&q=85",
+      image:
+        "https://images.unsplash.com/photo-1750420556288-d0e32a6f517b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw4fHxDb250ZW1wb3JhcnklMjBiZWRyb29tJTIwaW50ZXJpb3IlMjB3aXRoJTIwYmVkJTIwbW9kZXJufGVufDB8MHx8fDE3Njg3NDc0MjV8MA&ixlib=rb-4.1.0&q=85",
       title: "Bed Room",
-      items: "1,500+ Items"
-    }
+      items: "1,500+ Items",
+    },
   ];
 
   const nextSlide = () => {
@@ -45,7 +54,7 @@ export default function Home() {
       case "latest":
         return products.slice(-6);
       case "bestsellers":
-        return products.filter(p => p.featured).slice(0, 6);
+        return products.filter((p) => p.featured).slice(0, 6);
       case "featured":
         return featuredProducts.slice(0, 6);
       default:
@@ -65,15 +74,19 @@ export default function Home() {
                 The Best Online Furniture Store
               </div>
               <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Explore Our Modern<br />
+                Explore Our Modern
+                <br />
                 Furniture Collection
               </h1>
               <p className="text-gray-600 text-lg mb-8 max-w-md">
-                Discover timeless elegance and modern comfort with our curated collection of premium furniture.
-                Transform your space with pieces that blend luxury craftsmanship with contemporary design.
+                Discover timeless elegance and modern comfort with our curated
+                collection of premium furniture. Transform your space with
+                pieces that blend luxury craftsmanship with contemporary design.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link to="/products" className="btn-primary text-center inline-flex items-center justify-center">
+                <Link
+                  to="/products"
+                  className="btn-primary text-center inline-flex items-center justify-center">
                   Shop Now →
                 </Link>
                 <Link to="/products" className="btn-outline text-center">
@@ -84,17 +97,37 @@ export default function Home() {
               {/* Ratings Display */}
               <div className="flex items-center gap-4">
                 <div className="flex -space-x-2">
-                  <img src="https://i.pravatar.cc/40?u=user1" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://i.pravatar.cc/40?u=user2" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://i.pravatar.cc/40?u=user3" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
-                  <img src="https://i.pravatar.cc/40?u=user4" alt="Customer" className="w-10 h-10 rounded-full border-2 border-white" />
+                  <img
+                    src="https://i.pravatar.cc/40?u=user1"
+                    alt="Customer"
+                    className="w-10 h-10 rounded-full border-2 border-white"
+                  />
+                  <img
+                    src="https://i.pravatar.cc/40?u=user2"
+                    alt="Customer"
+                    className="w-10 h-10 rounded-full border-2 border-white"
+                  />
+                  <img
+                    src="https://i.pravatar.cc/40?u=user3"
+                    alt="Customer"
+                    className="w-10 h-10 rounded-full border-2 border-white"
+                  />
+                  <img
+                    src="https://i.pravatar.cc/40?u=user4"
+                    alt="Customer"
+                    className="w-10 h-10 rounded-full border-2 border-white"
+                  />
                 </div>
                 <div>
                   <div className="flex items-center gap-1 text-[#fbbf24]">
                     <Star size={18} fill="#fbbf24" />
-                    <span className="font-bold text-gray-900">4.9 Ratings+</span>
+                    <span className="font-bold text-gray-900">
+                      4.9 Ratings+
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-600">Trusted by 500+ Customers</p>
+                  <p className="text-sm text-gray-600">
+                    Trusted by 500+ Customers
+                  </p>
                 </div>
               </div>
             </div>
@@ -102,14 +135,18 @@ export default function Home() {
             {/* Right Content - Room Showcases */}
             <div className="grid grid-cols-2 gap-4">
               <div className="relative group overflow-hidden rounded-2xl col-span-2">
-                <img 
+                <img
                   src={slides[currentSlide].image}
-                  alt={slides[currentSlide].title} 
+                  alt={slides[currentSlide].title}
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <h3 className="text-white font-bold text-lg">{slides[currentSlide].title}</h3>
-                  <p className="text-white/90 text-sm">{slides[currentSlide].items}</p>
+                  <h3 className="text-white font-bold text-lg">
+                    {slides[currentSlide].title}
+                  </h3>
+                  <p className="text-white/90 text-sm">
+                    {slides[currentSlide].items}
+                  </p>
                 </div>
                 <button className="absolute bottom-4 right-4 w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
                   →
@@ -118,8 +155,7 @@ export default function Home() {
                 <div className="absolute top-4 left-4 animate-bounce">
                   <Link
                     to="/products"
-                    className="inline-block bg-gradient-to-r from-[#D4AF37] to-[#B8952A] text-white px-4 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                  >
+                    className="inline-block bg-gradient-to-r from-[#D4AF37] to-[#B8952A] text-white px-4 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                     Shop Now →
                   </Link>
                 </div>
@@ -127,10 +163,14 @@ export default function Home() {
 
               {/* Action Buttons */}
               <div className="col-span-2 flex items-center justify-center gap-4">
-                <button onClick={prevSlide} className="w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
+                <button
+                  onClick={prevSlide}
+                  className="w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center text-white hover:bg-[#b8942a] transition-colors">
                   <ChevronLeft size={24} />
                 </button>
-                <button onClick={nextSlide} className="w-12 h-12 bg-[#fbbf24] rounded-full flex items-center justify-center text-white hover:bg-[#f59e0b] transition-colors">
+                <button
+                  onClick={nextSlide}
+                  className="w-12 h-12 bg-[#fbbf24] rounded-full flex items-center justify-center text-white hover:bg-[#f59e0b] transition-colors">
                   <ChevronRight size={24} />
                 </button>
               </div>
@@ -202,8 +242,12 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">1500+ Items</p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Chairs</h3>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">
+                    1500+ Items
+                  </p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Chairs
+                  </h3>
                   <ul className="space-y-2 text-gray-600 text-sm">
                     <li>Executive Office Chairs</li>
                     <li>Lounge Chair</li>
@@ -215,9 +259,9 @@ export default function Home() {
                     <li>Club Chair</li>
                   </ul>
                 </div>
-                <img 
+                <img
                   src="https://images.pexels.com/photos/7614546/pexels-photo-7614546.jpeg"
-                  alt="Chair" 
+                  alt="Chair"
                   className="w-32 h-40 object-cover rounded-lg"
                 />
               </div>
@@ -227,8 +271,12 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">750+ Items</p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Sofa</h3>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">
+                    750+ Items
+                  </p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Sofa
+                  </h3>
                   <ul className="space-y-2 text-gray-600 text-sm">
                     <li>Reclining Sofa</li>
                     <li>Sectional Sofa</li>
@@ -236,9 +284,9 @@ export default function Home() {
                     <li>Curved Sofa</li>
                   </ul>
                 </div>
-                <img 
+                <img
                   src="https://images.pexels.com/photos/15253321/pexels-photo-15253321.jpeg"
-                  alt="Sofa" 
+                  alt="Sofa"
                   className="w-32 h-40 object-cover rounded-lg"
                 />
               </div>
@@ -248,8 +296,12 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">450+ Items</p>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Lighting</h3>
+                  <p className="text-[#fbbf24] font-semibold text-sm mb-1">
+                    450+ Items
+                  </p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Lighting
+                  </h3>
                   <ul className="space-y-2 text-gray-600 text-sm">
                     <li>Table Lights</li>
                     <li>Floor Lights</li>
@@ -257,9 +309,9 @@ export default function Home() {
                     <li>Wall Lights</li>
                   </ul>
                 </div>
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1758983304673-5a2d091e43e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwyNXx8TW9kZXJuJTIwcGVuZGFudCUyMGxhbXAlMjBjb3BwZXIlMjBoYW5naW5nJTIwbGlnaHQlMjBsaWdodGluZ3xlbnwwfDF8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85"
-                  alt="Lighting" 
+                  alt="Lighting"
                   className="w-32 h-40 object-cover rounded-lg"
                 />
               </div>
@@ -286,8 +338,7 @@ export default function Home() {
                 activeTab === "all"
                   ? "bg-[#D4AF37] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
+              }`}>
               All Products
             </button>
             <button
@@ -296,8 +347,7 @@ export default function Home() {
                 activeTab === "latest"
                   ? "bg-[#D4AF37] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
+              }`}>
               Latest Products
             </button>
             <button
@@ -306,8 +356,7 @@ export default function Home() {
                 activeTab === "bestsellers"
                   ? "bg-[#D4AF37] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
+              }`}>
               Best Sellers
             </button>
             <button
@@ -316,8 +365,7 @@ export default function Home() {
                 activeTab === "featured"
                   ? "bg-[#D4AF37] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
+              }`}>
               Featured Products
             </button>
           </div>
