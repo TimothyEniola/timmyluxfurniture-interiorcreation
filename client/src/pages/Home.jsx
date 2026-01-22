@@ -16,6 +16,9 @@ export default function Home() {
   const featuredProducts = products.filter((p) => p.featured);
   const [activeTab, setActiveTab] = useState("all");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [chairsExpanded, setChairsExpanded] = useState(false);
+  const [sofaExpanded, setSofaExpanded] = useState(false);
+  const [lightingExpanded, setLightingExpanded] = useState(false);
 
   const slides = [
     {
@@ -237,7 +240,7 @@ export default function Home() {
       {/* Categories Section */}
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Chairs Category */}
             <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between mb-4">
@@ -253,16 +256,26 @@ export default function Home() {
                     <li>Lounge Chair</li>
                     <li>Reading Chair</li>
                     <li>Dining Chair</li>
-                    <li>Office Chair</li>
-                    <li>Armchair</li>
-                    <li>Bar Stool</li>
-                    <li>Club Chair</li>
+                    {chairsExpanded && (
+                      <>
+                        <li>Office Chair</li>
+                        <li>Armchair</li>
+                        <li>Bar Stool</li>
+                        <li>Club Chair</li>
+                      </>
+                    )}
                   </ul>
+                  <button
+                    onClick={() => setChairsExpanded(!chairsExpanded)}
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
+                  >
+                    {chairsExpanded ? "Read Less" : "Read More"}
+                  </button>
                 </div>
                 <img
                   src="https://images.pexels.com/photos/7614546/pexels-photo-7614546.jpeg"
                   alt="Chair"
-                  className="w-32 h-40 object-cover rounded-lg"
+                  className="w-40 h-48 object-cover rounded-lg"
                 />
               </div>
             </div>
@@ -280,14 +293,24 @@ export default function Home() {
                   <ul className="space-y-2 text-gray-600 text-sm">
                     <li>Reclining Sofa</li>
                     <li>Sectional Sofa</li>
-                    <li>Armless Sofa</li>
-                    <li>Curved Sofa</li>
+                    {sofaExpanded && (
+                      <>
+                        <li>Armless Sofa</li>
+                        <li>Curved Sofa</li>
+                      </>
+                    )}
                   </ul>
+                  <button
+                    onClick={() => setSofaExpanded(!sofaExpanded)}
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
+                  >
+                    {sofaExpanded ? "Read Less" : "Read More"}
+                  </button>
                 </div>
                 <img
                   src="https://images.pexels.com/photos/15253321/pexels-photo-15253321.jpeg"
                   alt="Sofa"
-                  className="w-32 h-40 object-cover rounded-lg"
+                  className="w-40 h-48 object-cover rounded-lg"
                 />
               </div>
             </div>
@@ -305,14 +328,24 @@ export default function Home() {
                   <ul className="space-y-2 text-gray-600 text-sm">
                     <li>Table Lights</li>
                     <li>Floor Lights</li>
-                    <li>Ceiling Lights</li>
-                    <li>Wall Lights</li>
+                    {lightingExpanded && (
+                      <>
+                        <li>Ceiling Lights</li>
+                        <li>Wall Lights</li>
+                      </>
+                    )}
                   </ul>
+                  <button
+                    onClick={() => setLightingExpanded(!lightingExpanded)}
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
+                  >
+                    {lightingExpanded ? "Read Less" : "Read More"}
+                  </button>
                 </div>
                 <img
                   src="https://images.unsplash.com/photo-1758983304673-5a2d091e43e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwyNXx8TW9kZXJuJTIwcGVuZGFudCUyMGxhbXAlMjBjb3BwZXIlMjBoYW5naW5nJTIwbGlnaHQlMjBsaWdodGluZ3xlbnwwfDF8fHwxNzY4NzQ3NDI1fDA&ixlib=rb-4.1.0&q=85"
                   alt="Lighting"
-                  className="w-32 h-40 object-cover rounded-lg"
+                  className="w-40 h-48 object-cover rounded-lg"
                 />
               </div>
             </div>

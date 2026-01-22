@@ -366,7 +366,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Add Product Form */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <div id="add-product" className="bg-white rounded-xl shadow-sm p-6 mb-8">
           <h2 className="text-xl font-bold text-[#011F5B] mb-6">
             Add New Product
           </h2>
@@ -522,7 +522,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Products Management Table */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+        <div id="products" className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
           <div className="p-6 border-b">
             <h2 className="text-xl font-bold text-[#D4AF37]">Manage Products</h2>
           </div>
@@ -610,7 +610,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div id="orders" className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="p-6 border-b">
             <h2 className="text-xl font-bold text-[#D4AF37]">Recent Orders</h2>
           </div>

@@ -117,7 +117,7 @@ export default function Cart() {
                   </span>
                 </div>
               </div>
-              <Link to="/checkout" className="btn-secondary w-full block text-center">
+              <Link to="/checkout" className="btn-secondary w-full block text-center text-white">
                 Proceed to Checkout
               </Link>
               <Link

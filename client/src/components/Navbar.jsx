@@ -76,12 +76,6 @@ export default function Navbar() {
             >
               Contact Us
             </Link>
-            <Link
-              to="/admin"
-              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium"
-            >
-              Admin
-            </Link>
           </div>
 
           {/* Action Icons */}
@@ -147,14 +141,6 @@ export default function Navbar() {
                   <span className="text-sm">{user?.name}</span>
                 </button>
                 <div className="absolute right-0 top-full mt-2 w-48 bg-[#D4AF37] shadow-lg rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                  {user?.role === "admin" && (
-                    <Link
-                      to="/admin"
-                      className="block px-4 py-2  text-sm"
-                    >
-                      Admin Dashboard
-                    </Link>
-                  )}
                   <button
                     onClick={signOut}
                     className="block w-full text-left px-4 py-2  text-sm cursor-pointer"
@@ -215,13 +201,6 @@ export default function Navbar() {
               Contact Us
             </Link>
             <Link
-              to="/admin"
-              className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Admin
-            </Link>
-            <Link
               to="/cart"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
               onClick={() => setMobileMenuOpen(false)}
@@ -237,15 +216,6 @@ export default function Navbar() {
             </Link>
             {isAuthenticated ? (
               <>
-                {user?.role === "admin" && (
-                  <Link
-                    to="/admin"
-                    className="block hover:text-[#011F5B] transition-colors font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Admin Dashboard
-                  </Link>
-                )}
                 <button
                   onClick={() => {
                     signOut();

@@ -25,7 +25,13 @@ export default function Checkout() {
     e.preventDefault();
 
     // Validate required fields
-    if (!formData.fullName || !formData.phone || !formData.address || !formData.city || !formData.state) {
+    if (
+      !formData.fullName ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.city ||
+      !formData.state
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -237,8 +243,12 @@ export default function Checkout() {
                     />
                     <CreditCard className="text-[#D4AF37]" size={20} />
                     <div>
-                      <p className="font-semibold text-gray-900">Pay with Card</p>
-                      <p className="text-sm text-gray-600">Secure payment via Paystack</p>
+                      <p className="font-semibold text-gray-900">
+                        Pay with Card
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Secure payment via Paystack
+                      </p>
                     </div>
                   </label>
 
@@ -253,8 +263,12 @@ export default function Checkout() {
                     />
                     <Truck className="text-[#D4AF37]" size={20} />
                     <div>
-                      <p className="font-semibold text-gray-900">Cash on Delivery</p>
-                      <p className="text-sm text-gray-600">Pay when you receive your order</p>
+                      <p className="font-semibold text-gray-900">
+                        Cash on Delivery
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Pay when you receive your order
+                      </p>
                     </div>
                   </label>
                 </div>
@@ -263,15 +277,16 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                className="btn-secondary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed text-white">
                 {isProcessing ? (
                   <span className="flex items-center justify-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Processing...
                   </span>
+                ) : paymentMethod === "paystack" ? (
+                  "Pay Now with Paystack"
                 ) : (
-                  paymentMethod === "paystack" ? "Pay Now with Paystack" : "Place Order (Cash on Delivery)"
+                  "Place Order (Cash on Delivery)"
                 )}
               </button>
             </form>
