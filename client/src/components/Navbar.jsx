@@ -4,7 +4,7 @@ import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
 import { ShoppingCart, Menu, X, Search, Heart, User } from "lucide-react";
 import { useState, useEffect } from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/reallogo-removebg-preview.png";
 export default function Navbar() {
   const { getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
@@ -26,14 +26,14 @@ export default function Navbar() {
   // Close search dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchOpen && !event.target.closest('.search-container')) {
+      if (searchOpen && !event.target.closest(".search-container")) {
         setSearchOpen(false);
         setSearchQuery("");
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [searchOpen]);
 
   return (
@@ -42,21 +42,19 @@ export default function Navbar() {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Timmy Luxe Logo" className="h-10" />
+            <img src={logo} alt="Timmy Luxe Logo" className="h-10 w-10 object-cover" />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             <Link
               to="/"
-              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium"
-            >
+              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
               Home
             </Link>
             <Link
               to="/products"
-              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium"
-            >
+              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
               Shop
             </Link>
             {/* <div className="relative group">
@@ -66,14 +64,12 @@ export default function Navbar() {
             </div> */}
             <Link
               to="/custom-request"
-              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium"
-            >
+              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
               Custom Request
             </Link>
             <Link
               to="/contact"
-              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium"
-            >
+              className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
               Contact Us
             </Link>
           </div>
@@ -85,8 +81,7 @@ export default function Navbar() {
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="hover:text-[#D4AF37] transition-colors"
-                aria-label="Search"
-              >
+                aria-label="Search">
                 <Search size={20} />
               </button>
               {searchOpen && (
@@ -102,8 +97,7 @@ export default function Navbar() {
                     />
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-[#D4AF37] text-white rounded-md hover:bg-[#b8942a] transition-colors"
-                    >
+                      className="px-4 py-2 bg-[#D4AF37] text-white rounded-md hover:bg-[#b8942a] transition-colors">
                       Search
                     </button>
                   </form>
@@ -113,8 +107,7 @@ export default function Navbar() {
             <Link
               to="/wishlist"
               className="hover:text-[#D4AF37] transition-colors relative"
-              aria-label="Wishlist"
-            >
+              aria-label="Wishlist">
               <Heart size={20} />
               {getWishlistCount() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-[#011F5B] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -125,8 +118,7 @@ export default function Navbar() {
             <Link
               to="/cart"
               className="hover:text-[#D4AF37] transition-colors relative"
-              aria-label="Cart"
-            >
+              aria-label="Cart">
               <ShoppingCart size={20} />
               {getCartCount() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-[#011F5B] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -143,8 +135,7 @@ export default function Navbar() {
                 <div className="absolute right-0 top-full mt-2 w-48 bg-[#D4AF37] shadow-lg rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <button
                     onClick={signOut}
-                    className="block w-full text-left px-4 py-2  text-sm cursor-pointer"
-                  >
+                    className="block w-full text-left px-4 py-2  text-sm cursor-pointer">
                     Sign Out
                   </button>
                 </div>
@@ -153,8 +144,7 @@ export default function Navbar() {
               <Link
                 to="/signin"
                 className="hover:text-[#D4AF37] transition-colors"
-                aria-label="Sign In"
-              >
+                aria-label="Sign In">
                 <User size={20} />
               </Link>
             )}
@@ -163,8 +153,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -175,43 +164,37 @@ export default function Navbar() {
             <Link
               to="/"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
             <Link
               to="/products"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Shop
             </Link>
             <Link
               to="/custom-request"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Custom Request
             </Link>
             <Link
               to="/contact"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Contact Us
             </Link>
             <Link
               to="/cart"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Cart ({getCartCount()})
             </Link>
             <Link
               to="/wishlist"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+              onClick={() => setMobileMenuOpen(false)}>
               Wishlist ({getWishlistCount()})
             </Link>
             {isAuthenticated ? (
@@ -221,8 +204,7 @@ export default function Navbar() {
                     signOut();
                     setMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left hover:text-[#D4AF37] transition-colors font-medium"
-                >
+                  className="block w-full text-left hover:text-[#D4AF37] transition-colors font-medium">
                   Sign Out ({user?.name})
                 </button>
               </>
@@ -230,8 +212,7 @@ export default function Navbar() {
               <Link
                 to="/signin"
                 className="block hover:text-[#D4AF37] transition-colors font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+                onClick={() => setMobileMenuOpen(false)}>
                 Sign In
               </Link>
             )}

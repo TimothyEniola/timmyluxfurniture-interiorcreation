@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Menu, X, BarChart3, Package, Plus, ShoppingCart, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/reallogo-removebg-preview.png";
 
 export default function AdminNavbar() {
   const { user, signOut } = useAuth();
