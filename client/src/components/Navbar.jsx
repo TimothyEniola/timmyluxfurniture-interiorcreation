@@ -129,13 +129,33 @@ export default function Navbar() {
             {isAuthenticated ? (
               <div className="relative group">
                 <button className="hover:text-[#D4AF37] transition-colors flex items-center gap-2">
-                  <User size={20} />
+                  {user?.profileImage ? (
+                    <img 
+                      src={user.profileImage} 
+                      alt={user.name} 
+                      className="w-8 h-8 rounded-full object-cover border-2 border-[#D4AF37]"
+                    />
+                  ) : (
+                    <User size={20} />
+                  )}
                   <span className="text-sm">{user?.name}</span>
                 </button>
                 <div className="absolute right-0 top-full mt-2 w-48 bg-[#D4AF37] shadow-lg rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
+                  >
+                    Settings
+                  </Link>
                   <button
                     onClick={signOut}
-                    className="block w-full text-left px-4 py-2  text-sm cursor-pointer">
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors">
                     Sign Out
                   </button>
                 </div>
@@ -199,6 +219,37 @@ export default function Navbar() {
             </Link>
             {isAuthenticated ? (
               <>
+                <div className="flex items-center gap-3 px-2 py-2 border-b border-gray-200 mb-2">
+                  {user?.profileImage ? (
+                    <img 
+                      src={user.profileImage} 
+                      alt={user.name} 
+                      className="w-10 h-10 rounded-full object-cover border-2 border-[#D4AF37]"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-[#011F5B] rounded-full flex items-center justify-center">
+                      <User size={20} className="text-white" />
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-medium text-[#011F5B]">{user?.name}</p>
+                    <p className="text-sm text-gray-600">{user?.email}</p>
+                  </div>
+                </div>
+                <Link
+                  to="/profile"
+                  className="block hover:text-[#D4AF37] transition-colors font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  className="block hover:text-[#D4AF37] transition-colors font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Settings
+                </Link>
                 <button
                   onClick={() => {
                     signOut();

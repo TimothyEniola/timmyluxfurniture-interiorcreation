@@ -87,7 +87,9 @@ export default function ProductCard({ product, showDiscount = false }) {
       <div className="p-4">
         {/* Countdown Timer (only if showDiscount) */}
         {showDiscount && discountPercentage > 0 && (
-          <div className="bg-[#fbbf24] rounded-lg p-2 mb-3 flex items-center justify-between text-xs font-semibold">
+          <div className={`rounded-lg p-2 mb-3 flex items-center justify-between text-xs font-semibold ${
+            timeLeft.days > 2 ? 'bg-green-500' : 'bg-red-500'
+          }`}>
             <div className="text-center">
               <div className="text-white text-lg">{String(timeLeft.days).padStart(2, '0')}</div>
               <div className="text-white/80">Days</div>

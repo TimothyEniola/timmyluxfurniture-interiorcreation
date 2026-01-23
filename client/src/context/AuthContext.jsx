@@ -23,6 +23,9 @@ export const AuthProvider = ({ children }) => {
         email,
         name: "Admin",
         role: "admin",
+        profileImage: "https://i.pravatar.cc/150?u=admin",
+        phone: "",
+        address: "",
       };
       setUser(adminUser);
       return { success: true, user: adminUser };
@@ -32,6 +35,9 @@ export const AuthProvider = ({ children }) => {
       email,
       name: email.split("@")[0],
       role: "customer",
+      profileImage: `https://i.pravatar.cc/150?u=${email}`,
+      phone: "",
+      address: "",
     };
     setUser(regularUser);
     return { success: true, user: regularUser };
@@ -43,6 +49,9 @@ export const AuthProvider = ({ children }) => {
       email,
       name,
       role: "customer",
+      profileImage: `https://i.pravatar.cc/150?u=${email}`,
+      phone: "",
+      address: "",
     };
     setUser(newUser);
     return { success: true, user: newUser };
@@ -50,6 +59,10 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = () => {
     setUser(null);
+  };
+
+  const updateUser = (updates) => {
+    setUser(prev => prev ? { ...prev, ...updates } : null);
   };
 
   const isAdmin = () => {
@@ -63,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signUp,
         signOut,
+        updateUser,
         isAdmin,
         isAuthenticated: !!user,
       }}

@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Menu, X, BarChart3, Package, Plus, ShoppingCart, LogOut } from "lucide-react";
+import { Menu, X, BarChart3, Package, Plus, ShoppingCart, LogOut, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "../assets/reallogo-removebg-preview.png";
 
@@ -20,9 +20,9 @@ export default function AdminNavbar() {
 
   const navItems = [
     { path: "/admin", label: "Dashboard", icon: BarChart3 },
-    { path: "/admin#products", label: "Manage Products", icon: Package },
-    { path: "/admin#add-product", label: "Add New Product", icon: Plus },
-    { path: "/admin#orders", label: "Recent Orders", icon: ShoppingCart },
+    { path: "/admin/products", label: "Manage Products", icon: Package },
+    { path: "/admin/add-product", label: "Add New Product", icon: Plus },
+    { path: "/admin/orders", label: "Recent Orders", icon: ShoppingCart },
   ];
 
   return (
@@ -53,7 +53,20 @@ export default function AdminNavbar() {
 
           {/* User Actions */}
           <div className="hidden lg:flex items-center gap-6">
-            <span className="text-sm">Welcome, {user?.name}</span>
+            <div className="flex items-center gap-3">
+              {user?.profileImage ? (
+                <img 
+                  src={user.profileImage} 
+                  alt={user.name} 
+                  className="w-8 h-8 rounded-full object-cover border-2 border-[#D4AF37]"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-[#011F5B] rounded-full flex items-center justify-center">
+                  <User size={16} className="text-white" />
+                </div>
+              )}
+              <span className="text-sm">Welcome, {user?.name}</span>
+            </div>
             <button
               onClick={signOut}
               className="hover:text-[#D4AF37] transition-colors flex items-center gap-2"
@@ -89,7 +102,23 @@ export default function AdminNavbar() {
               </Link>
             ))}
             <div className="pt-2 border-t">
-              <span className="block text-sm text-gray-300 mb-2">Welcome, {user?.name}</span>
+              <div className="flex items-center gap-3 mb-3">
+                {user?.profileImage ? (
+                  <img 
+                    src={user.profileImage} 
+                    alt={user.name} 
+                    className="w-10 h-10 rounded-full object-cover border-2 border-[#D4AF37]"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-[#011F5B] rounded-full flex items-center justify-center">
+                    <User size={20} className="text-white" />
+                  </div>
+                )}
+                <div>
+                  <span className="block text-sm text-gray-300">Welcome, {user?.name}</span>
+                  <span className="block text-xs text-gray-400">{user?.role}</span>
+                </div>
+              </div>
               <button
                 onClick={() => {
                   signOut();

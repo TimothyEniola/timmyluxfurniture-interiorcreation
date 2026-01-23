@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -22,18 +22,12 @@ import {
   DollarSign,
   CheckCircle,
   Clock,
-  XCircle,
-  Upload,
-  Image as ImageIcon,
-  Trash2,
 } from "lucide-react";
-import { useProducts } from "../context/ProductContext";
 import { useAuth } from "../context/AuthContext";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
-  const { products, addProduct, toggleAvailability, deleteProduct } = useProducts();
 
   // Check if user is admin
   useEffect(() => {
@@ -41,7 +35,8 @@ export default function AdminDashboard() {
       navigate("/signin");
     }
   }, [isAdmin, navigate]);
-  const [orders, setOrders] = useState([
+
+  const [orders] = useState([
     {
       id: 1,
       customer: "Esther Adebayo",
@@ -100,18 +95,6 @@ export default function AdminDashboard() {
     },
   ]);
 
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-    image: "",
-    featured: false,
-  });
-
-  const [imagePreview, setImagePreview] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
-
   // Calculate statistics
   const totalSales = orders
     .filter((o) => o.status === "Delivered")
@@ -147,77 +130,6 @@ export default function AdminDashboard() {
     { category: "Office", sales: 4, amount: 1280000 },
   ];
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        alert("Please select a valid image file");
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should be less than 5MB");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setNewProduct({ ...newProduct, image: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAddProduct = (e) => {
-    e.preventDefault();
-    
-    if (!newProduct.image) {
-      alert("Please upload a product image");
-      return;
-    }
-
-    const productToAdd = {
-      ...newProduct,
-      price: parseInt(newProduct.price),
-    };
-
-    addProduct(productToAdd);
-    
-    // Show success message
-    setSuccessMessage(`Product "${newProduct.name}" added successfully!`);
-    setTimeout(() => setSuccessMessage(""), 3000);
-
-    // Reset form
-    setNewProduct({
-      name: "",
-      price: "",
-      category: "",
-      description: "",
-      image: "",
-      featured: false,
-    });
-    setImagePreview(null);
-  };
-
-  const handleToggleAvailability = (productId, productName) => {
-    toggleAvailability(productId);
-    const product = products.find(p => p.id === productId);
-    const newStatus = product.available ? 'unavailable' : 'available';
-    setSuccessMessage(`Product "${productName}" marked as ${newStatus}!`);
-    setTimeout(() => setSuccessMessage(""), 3000);
-  };
-
-  const handleDeleteProduct = (productId, productName) => {
-    if (window.confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
-      deleteProduct(productId);
-      setSuccessMessage(`Product "${productName}" deleted successfully!`);
-      setTimeout(() => setSuccessMessage(""), 3000);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container-custom py-8">
@@ -225,17 +137,9 @@ export default function AdminDashboard() {
         <div className="mb-8">
           <h1 className="section-heading">Admin Dashboard</h1>
           <p className="text-gray-600">
-            Manage your furniture store and track performance
+            Monitor your store performance and analytics
           </p>
         </div>
-
-        {/* Success Message */}
-        {successMessage && (
-          <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <CheckCircle size={20} />
-            <span>{successMessage}</span>
-          </div>
-        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -365,316 +269,35 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Add Product Form */}
-        <div id="add-product" className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-bold text-[#011F5B] mb-6">
-            Add New Product
-          </h2>
-          <form onSubmit={handleAddProduct} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Product Name *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Luxury Sofa Set"
-                  value={newProduct.name}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, name: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Price (₦) *
-                </label>
-                <input
-                  type="number"
-                  placeholder="450000"
-                  value={newProduct.price}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, price: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Category *
-                </label>
-                <select
-                  value={newProduct.category}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, category: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  required
-                >
-                  <option value="">Select Category</option>
-                  <option value="Bedroom">Bedroom</option>
-                  <option value="Living Room">Living Room</option>
-                  <option value="Dining">Dining</option>
-                  <option value="Office">Office</option>
-                  <option value="Storage">Storage</option>
-                </select>
-              </div>
-              <div className="flex items-center">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={newProduct.featured}
-                    onChange={(e) =>
-                      setNewProduct({
-                        ...newProduct,
-                        featured: e.target.checked,
-                      })
-                    }
-                    className="w-5 h-5 text-[#D4AF37] border-gray-300 rounded focus:ring-[#D4AF37]"
-                  />
-                  <span className="text-sm font-semibold text-gray-700">
-                    Feature on Homepage
-                  </span>
-                </label>
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Description
-                </label>
-                <textarea
-                  placeholder="Brief description of the product"
-                  value={newProduct.description}
-                  onChange={(e) =>
-                    setNewProduct({
-                      ...newProduct,
-                      description: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-                  rows="2"
-                />
-              </div>
-            </div>
-
-            {/* Image Upload */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Product Image *
-              </label>
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-10 h-10 mb-3 text-gray-400" />
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span> or
-                        drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG or WEBP (MAX. 5MB)
-                      </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </label>
-                </div>
-                {imagePreview && (
-                  <div className="flex-1">
-                    <div className="relative h-48 border-2 border-gray-300 rounded-lg overflow-hidden">
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setImagePreview(null);
-                          setNewProduct({ ...newProduct, image: "" });
-                        }}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
-                      >
-                        <XCircle size={20} />
-                      </button>
-                    </div>
-                    <p className="text-sm text-green-600 mt-2 text-center">
-                      Image ready to upload
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <button type="submit" className="btn-secondary w-full text-white">
-              <span className="flex items-center justify-center gap-2">
-                <Package size={20} />
-                Add Product to Store
-              </span>
-            </button>
-          </form>
-        </div>
-
-        {/* Products Management Table */}
-        <div id="products" className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-[#D4AF37]">Manage Products</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Image
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Product Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Availability
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                      {product.name}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {product.category}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#D4AF37]">
-                      ₦{product.price.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {product.available ? (
-                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Available
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                          Unavailable
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleToggleAvailability(product.id, product.name)}
-                          className={`text-sm font-medium px-3 py-1 rounded transition-colors ${
-                            product.available
-                              ? 'text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100'
-                              : 'text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100'
-                          }`}
-                          title={product.available ? "Mark as unavailable" : "Mark as available"}
-                        >
-                          {product.available ? "Mark Unavailable" : "Mark Available"}
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id, product.name)}
-                          className="text-red-600 hover:text-red-800 transition-colors p-2 rounded hover:bg-red-50"
-                          title="Delete product"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Link
+            to="/admin/products"
+            className="bg-white rounded-xl shadow-sm p-6 text-center hover:shadow-md transition-shadow cursor-pointer block"
+          >
+            <Package className="mx-auto mb-4 text-[#D4AF37]" size={32} />
+            <h3 className="font-semibold text-[#011F5B] mb-2">Manage Products</h3>
+            <p className="text-sm text-gray-600">Add, edit, and organize your products</p>
+          </Link>
+          <Link
+            to="/admin/orders"
+            className="bg-white rounded-xl shadow-sm p-6 text-center hover:shadow-md transition-shadow cursor-pointer block"
+          >
+            <TrendingUp className="mx-auto mb-4 text-[#D4AF37]" size={32} />
+            <h3 className="font-semibold text-[#011F5B] mb-2">View Orders</h3>
+            <p className="text-sm text-gray-600">Track and manage customer orders</p>
+          </Link>
+          <Link
+            to="/admin/add-product"
+            className="bg-[#D4AF37] rounded-xl shadow-sm p-6 text-center hover:shadow-md transition-shadow cursor-pointer block text-white"
+          >
+            <Users className="mx-auto mb-4 text-white" size={32} />
+            <h3 className="font-semibold mb-2">Add Product</h3>
+            <p className="text-sm opacity-90">Create new products for your store</p>
+          </Link>
         </div>
 
         {/* Orders Table */}
-        <div id="orders" className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-[#D4AF37]">Recent Orders</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Order ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Customer
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Product
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {orders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      #{order.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {order.customer}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {order.product}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#D4AF37]">
-                      ₦{order.amount.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {order.date}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          order.status === "Delivered"
-                            ? "bg-green-100 text-green-800"
-                            : order.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
   );
