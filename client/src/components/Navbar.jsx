@@ -153,6 +153,18 @@ export default function Navbar() {
                   >
                     Settings
                   </Link>
+                  <Link
+                    to="/order-history"
+                    className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
+                  >
+                    Order History
+                  </Link>
+                  <Link
+                    to="/track-order"
+                    className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
+                  >
+                    Track Order
+                  </Link>
                   <button
                     onClick={signOut}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors">
@@ -249,6 +261,20 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Settings
+                </Link>
+                <Link
+                  to="/order-history"
+                  className="block hover:text-[#D4AF37] transition-colors font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Order History
+                </Link>
+                <Link
+                  to="/track-order"
+                  className="block hover:text-[#D4AF37] transition-colors font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Track Order
                 </Link>
                 <button
                   onClick={() => {

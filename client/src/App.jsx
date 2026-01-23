@@ -14,6 +14,8 @@ import AdminAddProduct from "./pages/AdminAddProduct";
 import AdminOrders from "./pages/AdminOrders";
 import UserProfile from "./pages/UserProfile";
 import UserSettings from "./pages/UserSettings";
+import OrderHistory from "./pages/OrderHistory";
+import TrackOrder from "./pages/TrackOrder";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import CustomRequest from "./pages/CustomRequest";
@@ -44,6 +46,8 @@ function AppContent() {
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/settings" element={<UserSettings />} />
+        <Route path="/order-history" element={<OrderHistory />} />
+        <Route path="/track-order" element={<TrackOrder />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/admin/notifications" element={<Notifications />} />
         <Route path="/signin" element={<SignIn />} />

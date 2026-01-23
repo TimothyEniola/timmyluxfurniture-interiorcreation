@@ -134,7 +134,7 @@ export default function AdminProducts() {
                 <button
                   type="button"
                   onClick={() => setEditingProduct(null)}
-                  className="btn-secondary flex-1"
+                  className="btn-secondary flex-1 text-white"
                 >
                   Cancel
                 </button>

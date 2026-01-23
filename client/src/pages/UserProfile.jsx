@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { User, Mail, Phone, MapPin, Calendar, Camera } from "lucide-react";
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 
 export default function UserProfile() {
   const { user, updateUser } = useAuth();
@@ -137,6 +138,43 @@ export default function UserProfile() {
                 <p className="text-sm text-gray-600">Last login: Today</p>
               </div>
             </div>
+          </div>
+
+          {/* Addresses Section */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold text-[#011F5B] mb-4">Addresses</h3>
+            {user.addresses && user.addresses.length > 0 ? (
+              <div className="space-y-4">
+                {user.addresses.map((addr, index) => (
+                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-[#011F5B] mb-2">
+                      {index === 0 ? 'Address One Main Address' : `Address ${index + 1}`}
+                    </h4>
+                    {addr.houseNumber && <p className="text-gray-700">House {addr.houseNumber}</p>}
+                    <p className="text-gray-700">{addr.street}</p>
+                    <p className="text-gray-700">{addr.lga}, {addr.state}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No addresses added yet.</p>
+            )}
+          </div>
+
+          {/* History Section */}
+          <div className="mt-8">
+            <Link to="/order-history" className="block">
+              <h3 className="text-xl font-bold text-[#011F5B] mb-4 hover:text-[#D4AF37] transition-colors">Order History</h3>
+            </Link>
+            <p className="text-gray-500">View your past orders and purchase history.</p>
+          </div>
+
+          {/* Track Order Section */}
+          <div className="mt-8">
+            <Link to="/track-order" className="block">
+              <h3 className="text-xl font-bold text-[#011F5B] mb-4 hover:text-[#D4AF37] transition-colors">Track Orders</h3>
+            </Link>
+            <p className="text-gray-500">Track the status and location of your current orders.</p>
           </div>
         </div>
       </div>

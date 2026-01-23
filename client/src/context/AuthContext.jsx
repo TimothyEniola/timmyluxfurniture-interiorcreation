@@ -26,6 +26,8 @@ export const AuthProvider = ({ children }) => {
         profileImage: "https://i.pravatar.cc/150?u=admin",
         phone: "",
         address: "",
+        addresses: [],
+        orders: [],
       };
       setUser(adminUser);
       return { success: true, user: adminUser };
@@ -38,6 +40,8 @@ export const AuthProvider = ({ children }) => {
       profileImage: `https://i.pravatar.cc/150?u=${email}`,
       phone: "",
       address: "",
+      addresses: [],
+      orders: [],
     };
     setUser(regularUser);
     return { success: true, user: regularUser };
@@ -52,6 +56,8 @@ export const AuthProvider = ({ children }) => {
       profileImage: `https://i.pravatar.cc/150?u=${email}`,
       phone: "",
       address: "",
+      addresses: [],
+      orders: [],
     };
     setUser(newUser);
     return { success: true, user: newUser };
@@ -63,6 +69,70 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (updates) => {
     setUser(prev => prev ? { ...prev, ...updates } : null);
+  };
+
+  const createOrder = (orderData) => {
+    const orderId = `ORD-${Date.now()}`;
+    const newOrder = {
+      id: orderId,
+      date: new Date().toISOString().split('T')[0],
+      status: 'processing',
+      total: orderData.total,
+      items: orderData.items,
+      shippingAddress: orderData.shippingAddress,
+      paymentMethod: orderData.paymentMethod,
+      tracking: {
+        status: "Processing",
+        location: "Order Processing Center",
+        estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+        history: [
+          {
+            status: "Order Placed",
+            date: new Date().toLocaleString(),
+            location: "Online Order",
+            completed: true
+          }
+        ]
+      }
+    };
+
+    setUser(prev => prev ? { 
+      ...prev, 
+      orders: [newOrder, ...(prev.orders || [])] 
+    } : null);
+
+    return newOrder;
+  };
+
+  const updateOrderStatus = (orderId, status, location) => {
+    setUser(prev => {
+      if (!prev) return null;
+      
+      const updatedOrders = prev.orders.map(order => {
+        if (order.id === orderId) {
+          const newHistoryEntry = {
+            status: status,
+            date: new Date().toLocaleString(),
+            location: location,
+            completed: true
+          };
+          
+          return {
+            ...order,
+            status: status.toLowerCase(),
+            tracking: {
+              ...order.tracking,
+              status: status,
+              location: location,
+              history: [...order.tracking.history, newHistoryEntry]
+            }
+          };
+        }
+        return order;
+      });
+      
+      return { ...prev, orders: updatedOrders };
+    });
   };
 
   const isAdmin = () => {
@@ -77,6 +147,8 @@ export const AuthProvider = ({ children }) => {
         signUp,
         signOut,
         updateUser,
+        createOrder,
+        updateOrderStatus,
         isAdmin,
         isAuthenticated: !!user,
       }}

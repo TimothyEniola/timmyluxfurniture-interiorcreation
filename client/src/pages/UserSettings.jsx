@@ -12,7 +12,12 @@ export default function UserSettings() {
     name: user?.name || '',
     email: user?.email || '',
     phone: user?.phone || '',
-    address: user?.address || '',
+  });
+  const [addressData, setAddressData] = useState({
+    street: '',
+    lga: '',
+    state: '',
+    houseNumber: '',
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -39,6 +44,20 @@ export default function UserSettings() {
     e.preventDefault();
     updateUser(formData);
     alert('Profile updated successfully!');
+  };
+
+  const handleAddressUpdate = (e) => {
+    e.preventDefault();
+    // For now, add to addresses array
+    const newAddress = {
+      street: addressData.street,
+      lga: addressData.lga,
+      state: addressData.state,
+      houseNumber: addressData.houseNumber,
+    };
+    updateUser({ addresses: [...(user.addresses || []), newAddress] });
+    setAddressData({ street: '', lga: '', state: '', houseNumber: '' });
+    alert('Address added successfully!');
   };
 
   const handlePasswordChange = (e) => {
@@ -199,26 +218,80 @@ export default function UserSettings() {
                       placeholder="+234 xxx xxx xxxx"
                     />
                   </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Address
-                    </label>
-                    <textarea
-                      value={formData.address}
-                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      rows={3}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
-                      placeholder="Your full address"
-                    />
-                  </div>
                 </div>
 
                 <button type="submit" className="btn-primary">
                   Save Changes
                 </button>
               </form>
+
+              {/* Addresses Section */}
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold text-[#011F5B] mb-4">Addresses</h3>
+                <form onSubmit={handleAddressUpdate} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Street Name
+                      </label>
+                      <input
+                        type="text"
+                        value={addressData.street}
+                        onChange={(e) => setAddressData(prev => ({ ...prev, street: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+                        placeholder="Enter street name"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        LGA
+                      </label>
+                      <input
+                        type="text"
+                        value={addressData.lga}
+                        onChange={(e) => setAddressData(prev => ({ ...prev, lga: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+                        placeholder="Enter LGA"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        State
+                      </label>
+                      <input
+                        type="text"
+                        value={addressData.state}
+                        onChange={(e) => setAddressData(prev => ({ ...prev, state: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+                        placeholder="Enter state"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        House Number
+                      </label>
+                      <input
+                        type="text"
+                        value={addressData.houseNumber}
+                        onChange={(e) => setAddressData(prev => ({ ...prev, houseNumber: e.target.value }))}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+                        placeholder="Enter house number"
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-primary">
+                    Add Address
+                  </button>
+                </form>
               </div>
+            </div>
             )}
 
             {activeTab === 'security' && (

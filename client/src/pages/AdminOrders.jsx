@@ -1,53 +1,81 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function AdminOrders() {
+  const { updateOrderStatus: updateUserOrderStatus } = useAuth();
   const [orders, setOrders] = useState([]);
 
   // Mock orders data - in real app, this would come from API
   useEffect(() => {
     const mockOrders = [
       {
-        id: 1,
+        id: "ORD-1704067200000",
         customerName: "John Doe",
         email: "john@example.com",
         total: 150000,
-        status: "Pending",
-        date: "2024-01-20",
+        status: "processing",
+        date: "2024-01-01",
         items: [
           { name: "Modern Sofa", quantity: 1, price: 120000 },
           { name: "Coffee Table", quantity: 1, price: 30000 }
-        ]
+        ],
+        shippingAddress: {
+          fullName: "John Doe",
+          phone: "+2341234567890",
+          address: "123 Main St",
+          city: "Lagos",
+          state: "Lagos"
+        }
       },
       {
-        id: 2,
+        id: "ORD-1704153600000",
         customerName: "Jane Smith",
         email: "jane@example.com",
         total: 75000,
-        status: "Shipped",
-        date: "2024-01-19",
+        status: "shipped",
+        date: "2024-01-02",
         items: [
           { name: "Dining Chair", quantity: 4, price: 18750 }
-        ]
+        ],
+        shippingAddress: {
+          fullName: "Jane Smith",
+          phone: "+2340987654321",
+          address: "456 Oak Ave",
+          city: "Abuja",
+          state: "FCT"
+        }
       },
       {
-        id: 3,
+        id: "ORD-1704240000000",
         customerName: "Bob Johnson",
         email: "bob@example.com",
         total: 200000,
-        status: "Delivered",
-        date: "2024-01-18",
+        status: "delivered",
+        date: "2024-01-03",
         items: [
           { name: "King Size Bed", quantity: 1, price: 200000 }
-        ]
+        ],
+        shippingAddress: {
+          fullName: "Bob Johnson",
+          phone: "+2345678901234",
+          address: "789 Pine Rd",
+          city: "Port Harcourt",
+          state: "Rivers"
+        }
       }
     ];
     setOrders(mockOrders);
   }, []);
 
   const updateOrderStatus = (orderId, newStatus) => {
+    // Update local state
     setOrders(prev => prev.map(order =>
       order.id === orderId ? { ...order, status: newStatus } : order
     ));
+
+    // In a real app, this would also update the user's order status
+    // For demo purposes, we'll simulate updating user orders
+    // updateUserOrderStatus(orderId, newStatus, "Updated by admin");
   };
 
   const getStatusColor = (status) => {
@@ -107,7 +135,7 @@ export default function AdminOrders() {
                   <option value="Delivered">Delivered</option>
                 </select>
               </div>
-              <button className="btn-secondary text-sm">
+              <button className="btn-secondary text-sm text-white">
                 View Details
               </button>
             </div>

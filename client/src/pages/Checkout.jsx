@@ -3,9 +3,11 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, CreditCard, Truck } from "lucide-react";
 import { usePaystack } from "../hooks/usePaystack";
+import { useAuth } from "../context/AuthContext";
 
 export default function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();
+  const { user, createOrder } = useAuth();
   const navigate = useNavigate();
   const { initializePayment } = usePaystack();
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -60,6 +62,28 @@ export default function Checkout() {
   };
 
   const handleCashOnDelivery = () => {
+    // Create order
+    const orderData = {
+      total: getCartTotal(),
+      items: cart.map(item => ({
+        product_id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      shippingAddress: {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state
+      },
+      paymentMethod: "Cash on Delivery"
+    };
+
+    const newOrder = createOrder(orderData);
+    console.log("Order created:", newOrder);
+
     // Simulate order placement for COD
     setCompletedPaymentMethod("Cash on Delivery");
     setOrderPlaced(true);
@@ -71,6 +95,28 @@ export default function Checkout() {
   };
 
   const handlePaystackSuccess = (reference) => {
+    // Create order
+    const orderData = {
+      total: getCartTotal(),
+      items: cart.map(item => ({
+        product_id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      shippingAddress: {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state
+      },
+      paymentMethod: "Paystack"
+    };
+
+    const newOrder = createOrder(orderData);
+    console.log("Order created:", newOrder);
+
     // Handle successful payment
     console.log("Payment successful:", reference);
     setIsProcessing(false);

@@ -222,7 +222,7 @@ export default function AdminAddProduct() {
             <button
               type="button"
               onClick={() => navigate('/admin/products')}
-              className="btn-secondary flex-1"
+              className="btn-secondary flex-1 text-white"
             >
               Cancel
             </button>
