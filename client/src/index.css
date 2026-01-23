@@ -1,1 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#D4AF37] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-[#b8942a] hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-[#fbbf24] text-[#D4AF37] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-[#f59e0b] hover:shadow-lg;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[#D4AF37] text-[#D4AF37] px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-[#D4AF37] hover:text-white;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-bold text-gray-900 mb-4;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all;
+  }
+
+  .discount-badge {
+    @apply absolute top-3 left-3 bg-[#D4AF37] text-white px-3 py-1 rounded-full text-sm font-semibold;
+  }
+}
