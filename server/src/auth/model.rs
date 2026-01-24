@@ -1,13 +1,17 @@
-use chrono::{DateTime, Utc};
+
 use serde::{Serialize, Deserialize};
+use sqlx::types::time::OffsetDateTime;
+use chrono::DateTime as UtcDateTime;
 use uuid::Uuid;
+use chrono::Utc;
+
+
 
 use crate::helpers::uuid_v4;
 
 
 #[derive(Debug, Serialize, Deserialize, sqlx::Type)]
-#[sqlx(type_name = "user_status")] 
-#[serde(rename_all = "lowercase")]
+#[sqlx(type_name = "user_status", rename_all = "lowercase")]
 pub enum UserStatus {
     Active,
     Inactive,
@@ -39,8 +43,13 @@ pub struct User {
     pub password_hash: String,
     pub is_email_verified: bool,
     pub status: UserStatus, // <-- use enum
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
-    pub last_login_at: Option<DateTime<Utc>>,
+    pub created_at: OffsetDateTime,
+    pub updated_at: OffsetDateTime,
+    pub last_login_at: Option<OffsetDateTime>,
 }
-
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct RefreshToken {
+    pub user_id: Uuid,
+    pub token: String,
+    pub expires_at: DateTime<Utc>,
+}

@@ -1,6 +1,9 @@
-use crate::auth::model::User;
 use serde::{Deserialize, Serialize};
+use time::OffsetDateTime;
+use uuid::Uuid;
 use validator::Validate;
+
+use crate::auth::model::UserStatus;
 
 #[derive(Debug, Validate, Deserialize, Serialize, Clone, Default)]
 pub struct RegisterUserDto {
@@ -63,18 +66,27 @@ pub struct ChangePasswordDto {
     pub new_password: String,
 }
 
+#[derive(Debug, Serialize)]
 pub struct AuthResponseDto {
-    pub token: String,
+    pub access_token: String,   
+    pub refresh_token: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginResponseDto {
+    pub access_token: String,   // Renamed from 'token' to be explicit
+    pub refresh_token: String,  // New field
+    pub user: UserResponseDto,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UserResponseDto {
-    pub id: String,
+    pub id: Uuid,
     pub email: String,
     pub username: Option<String>,
     pub is_email_verified: bool,
-    pub status: String,
-    pub created_at: String,
-    pub updated_at: String,
-    pub last_login_at: Option<String>,
+    pub status: UserStatus,
+    pub created_at: OffsetDateTime,
+    pub updated_at: OffsetDateTime,
+    pub last_login_at: Option<OffsetDateTime>,
 }

@@ -2,6 +2,7 @@ use uuid::Uuid;
 use chrono::{DateTime, Utc};
 
 pub mod email;
+pub mod jwt;
 
 pub fn uuid_v4() -> Uuid {
     Uuid::new_v4()

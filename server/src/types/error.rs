@@ -13,6 +13,7 @@ pub enum AppError {
     Unauthorized,
     Forbidden,
     Internal,
+    Hashed(String)
 }
 
 impl From<sqlx::Error> for AppError {
@@ -33,6 +34,10 @@ impl IntoResponse for AppError {
             AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, Cow::Owned(msg)),
             AppError::Unauthorized => (StatusCode::UNAUTHORIZED, Cow::Borrowed("Unauthorized")),
             AppError::Forbidden => (StatusCode::FORBIDDEN, Cow::Borrowed("Forbidden")),
+            AppError::Hashed(msg) => {
+                error!(error = %msg, "Password hashing failed");
+                (StatusCode::INTERNAL_SERVER_ERROR, Cow::Borrowed("Internal server error"))
+            },
             AppError::Internal => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Cow::Borrowed("Internal server error"),

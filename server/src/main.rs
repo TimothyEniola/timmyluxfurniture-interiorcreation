@@ -40,7 +40,7 @@ async fn main() {
     let config = Config::from_env();
     let db_pool = connect_db_pool(&config).await;
 
-    let state = AppState { db: db_pool.clone() };
+    let state = AppState { db: db_pool.clone(), config: config.clone() };
 
     let app = Router::new()
         .merge(auth::route::router())

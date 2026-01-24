@@ -5,6 +5,7 @@ use dotenvy::dotenv;
 pub struct Config {
     pub database_url: String,
     pub max_db_connections: u32,
+    pub jwt_secret: String,
     pub smtp_server: String,
     pub smtp_username: String,
     pub smtp_password: String,
@@ -21,6 +22,8 @@ impl Config {
             .parse()
             .expect("MAX_DB_CONNECTIONS must be a valid number");
 
+        let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+
         let smtp_server = env::var("SMTP_SERVER").expect("SMTP_SERVER must be set");
         let smtp_username = env::var("SMTP_USERNAME").expect("SMTP_USERNAME must be set");
         let smtp_password = env::var("SMTP_PASSWORD").expect("SMTP_PASSWORD must be set");
@@ -33,6 +36,7 @@ impl Config {
             smtp_username,
             smtp_password,
             admin_email,
+            jwt_secret
         }
     }
 }
