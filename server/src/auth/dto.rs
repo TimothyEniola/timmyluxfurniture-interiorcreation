@@ -30,8 +30,6 @@ pub struct LoginDto {
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 pub struct RefreshTokenDto {
-    #[validate(length(min = 1, message = "Refresh token is required"))]
-    pub refresh_token: String,
 }
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
@@ -68,15 +66,14 @@ pub struct ChangePasswordDto {
 
 #[derive(Debug, Serialize)]
 pub struct AuthResponseDto {
-    pub access_token: String,   
-    pub refresh_token: String,
+    pub access_token: String, 
+      
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LoginResponseDto {
     pub access_token: String,   // Renamed from 'token' to be explicit
     pub refresh_token: String,  // New field
-    pub user: UserResponseDto,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

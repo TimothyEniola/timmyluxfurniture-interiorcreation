@@ -1,5 +1,5 @@
 use argon2::{
-    Argon2, password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::{OsRng, le}}
+    Argon2, password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::{OsRng,}}
 };
 use sha2::{Sha256, Digest}; // Add 'sha2' to Cargo.toml
 use crate::helpers::jwt::{generate_access_token, generate_refresh_token};
@@ -8,8 +8,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{PgPool};
 
 use crate::{config::Config, types::error::AppError};
-use crate::auth::dto::RefreshTokenDto;
-use super::{dto::{RegisterUserDto, LoginDto, AuthResponseDto, UserResponseDto}, model::{User, UserStatus, RefreshToken}};
+use super::{dto::{RegisterUserDto, LoginDto, LoginResponseDto,}, model::{User, UserStatus,}};
 
 
 // JWT Claims structure
@@ -69,7 +68,7 @@ pub async fn login_user_service(
     pool: &PgPool,
     config: &Config,
     payload: LoginDto,
-) -> Result<AuthResponseDto, AppError> {
+) -> Result<LoginResponseDto, AppError> {
     // 1. Find user
     let user = sqlx::query_as!(
         User,
@@ -123,7 +122,7 @@ pub async fn login_user_service(
 
     // 6. Return both
     // Note: We return the RAW refresh token to the user, but we stored the HASH.
-    Ok(AuthResponseDto {
+    Ok(LoginResponseDto {
         access_token,
         refresh_token: raw_refresh_token, 
     })
@@ -132,15 +131,15 @@ pub async fn login_user_service(
 pub async fn refresh_access_token_service(
     pool: &PgPool,
     config: &Config,
-    payload: RefreshTokenDto,
-) -> Result<AuthResponseDto, AppError> {
-    // 1. Hash the incoming raw token to match against the DB
+    raw_refresh_token: &str, // Coming from cookie
+) -> Result<(String, String), AppError> { // (AccessToken, NewRefreshToken)
+    
+    // 1. Hash the incoming raw token to find it in DB
     let mut hasher = Sha256::new();
-    hasher.update(payload.refresh_token.as_bytes());
+    hasher.update(raw_refresh_token.as_bytes());
     let token_hash = format!("{:x}", hasher.finalize());
 
-    // 2. Find the token in the DB
-    // We join with users to ensure the user still exists and isn't suspended
+    // 2. Find token in DB (Join with users to check if user is still active)
     let token_record = sqlx::query!(
         r#"
         SELECT rt.id, rt.user_id, rt.expires_at, rt.revoked, 
@@ -153,65 +152,43 @@ pub async fn refresh_access_token_service(
     )
     .fetch_optional(pool)
     .await?
-    .ok_or(AppError::Unauthorized)?; // Generic error to avoid leaking info
+    .ok_or(AppError::Unauthorized)?; 
 
     // 3. Security Checks
-    // Check if revoked
     if token_record.revoked {
-        // SECURITY ALERT: Reuse detection! 
-        // A revoked token is being used. This implies theft.
-        // Optional: Revoke ALL tokens for this user immediately.
-        tracing::warn!("Attempted reuse of revoked token for user {}", token_record.user_id);
+        // REUSE DETECTION: If a revoked token is used, it's a theft.
+        // Action: Delete ALL tokens for this user to force re-login everywhere.
+        sqlx::query!("DELETE FROM refresh_tokens WHERE user_id = $1", token_record.user_id)
+            .execute(pool).await?;
+        tracing::warn!("Revoked token reuse detected! User {} logged out.", token_record.user_id);
         return Err(AppError::Unauthorized);
     }
 
-    // Check if expired
     if token_record.expires_at < Utc::now() {
         return Err(AppError::Unauthorized);
     }
 
-    // Check if user is active
-    if matches!(token_record.user_status, UserStatus::Suspended | UserStatus::Inactive) {
-        return Err(AppError::Forbidden);
-    }
+    // 4. Token Rotation: Revoke the OLD token
+    sqlx::query!("UPDATE refresh_tokens SET revoked = true WHERE id = $1", token_record.id)
+        .execute(pool).await?;
 
-    // 4. Token Rotation: Revoke the CURRENT token
-    sqlx::query!(
-        "UPDATE refresh_tokens SET revoked = true WHERE id = $1",
-        token_record.id
-    )
-    .execute(pool)
-    .await?;
-
-    // 5. Issue NEW Tokens (Access + Refresh)
+    // 5. Generate NEW tokens
     let new_access_token = generate_access_token(token_record.user_id, config)?;
     let new_raw_refresh_token = generate_refresh_token();
     
-    // Hash new refresh token
+    // 6. Save NEW refresh token
     let mut new_hasher = Sha256::new();
     new_hasher.update(new_raw_refresh_token.as_bytes());
-    let new_token_hash = format!("{:x}", new_hasher.finalize());
-
-    // Save new refresh token
+    let new_hash = format!("{:x}", new_hasher.finalize());
     let expires_at = Utc::now() + Duration::days(30);
+
     sqlx::query(
-        r#"
-        INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
-        VALUES ($1, $2, $3)
-        "#
+        "INSERT INTO refresh_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3)"
     )
     .bind(token_record.user_id)
-    .bind(new_token_hash)
+    .bind(new_hash)
     .bind(expires_at)
-    .execute(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to save new refresh token: {}", e);
-        AppError::Internal
-    })?;
+    .execute(pool).await.map_err(|_| AppError::Internal)?;
 
-    Ok(AuthResponseDto {
-        access_token: new_access_token,
-        refresh_token: new_raw_refresh_token,
-    })
+    Ok((new_access_token, new_raw_refresh_token))
 }
