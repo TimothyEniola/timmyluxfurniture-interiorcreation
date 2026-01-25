@@ -39,7 +39,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/"
+                  to="/About"
                   className="text-gray-300 hover:text-[#D4AF37] transition-colors">
                   About Us
                 </Link>

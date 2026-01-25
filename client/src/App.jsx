@@ -25,7 +25,7 @@ import { ProductProvider } from "./context/ProductContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { NotificationProvider } from "./context/NotificationContext";
-
+import About from "./pages/About";
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -53,7 +53,7 @@ function AppContent() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/custom-request" element={<CustomRequest />} />
-        <Route path="/contact" element={<CustomRequest />} />
+        <Route path="/About" element={<About />} />
       </Routes>
       <Footer />
     </>
