@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Luxury Wooden Sofa",
+    "image": "https://yourwebsite.com/images/sofa1.jpg",
+    "category": "Sofa",
+    "price": 350000,
+    "description": "Handcrafted luxury wooden sofa with premium cushions.",
+    "material": "Hardwood & Fabric",
+    "dimensions": "220cm x 90cm x 85cm",
+    "inStock": true,
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "name": "Modern Dining Table Set",
+    "image": "https://yourwebsite.com/images/dining1.jpg",
+    "category": "Dining",
+    "price": 280000,
+    "description": "6-seater modern dining table with strong wooden finish.",
+    "material": "Mahogany Wood",
+    "dimensions": "180cm x 90cm x 75cm",
+    "inStock": true,
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "Executive Office Chair",
+    "image": "https://yourwebsite.com/images/chair1.jpg",
+    "category": "Office",
+    "price": 120000,
+    "description": "Comfortable executive office chair with leather finish.",
+    "material": "Leather & Steel",
+    "dimensions": "70cm x 70cm x 120cm",
+    "inStock": true,
+    "rating": 4.5
+  },
+  {
+    "id": 4,
+    "name": "King Size Bed Frame",
+    "image": "https://yourwebsite.com/images/bed1.jpg",
+    "category": "Bedroom",
+    "price": 450000,
+    "description": "Strong king size bed frame with luxury headboard design.",
+    "material": "Hardwood",
+    "dimensions": "200cm x 180cm",
+    "inStock": false,
+    "rating": 4.9
+  }
+]
