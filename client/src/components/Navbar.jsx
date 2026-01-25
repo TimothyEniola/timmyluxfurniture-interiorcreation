@@ -68,9 +68,9 @@ export default function Navbar() {
               Custom Request
             </Link>
             <Link
-              to="/contact"
+              to="/About"
               className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
-              Contact Us
+              About Us
             </Link>
           </div>
 
