@@ -12,6 +12,7 @@ export async function up(db) {
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         full_name VARCHAR(100),
+        role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('user', 'admin')),
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP

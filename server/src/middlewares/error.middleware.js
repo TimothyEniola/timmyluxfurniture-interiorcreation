@@ -1,30 +1,38 @@
 import { env } from "../config/env.js";
 import { logger } from "../config/logger.js";
 
-// 1. Handle "Route Not Found" (404)
+// 404 handler
 export const notFoundHandler = (req, res, next) => {
-  const error = new Error(`Not Found - ${req.originalUrl}`);
-  res.status(404);
-  next(error); // Pass error to the global handler below
+  const error = new Error(`Route Not Found - ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
 };
 
-// 2. Global Error Handler
+// Global error handler
 export const globalErrorHandler = (err, req, res, next) => {
-  // If status code is 200 (default), set it to 500 because we have an error
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  const statusCode = err.statusCode || res.statusCode || 500;
 
   res.status(statusCode);
 
-  // Log the error (In production, use Winston here instead of console.error)
-  logger.error(err.message, { 
-    method: req.method, 
-    url: req.url, 
-    stack: err.stack 
-  });
+  // Log properly
+  if (statusCode >= 500) {
+    logger.error(err.message, {
+      method: req.method,
+      url: req.url,
+      stack: err.stack,
+    });
+  } else {
+    logger.warn(err.message, {
+      method: req.method,
+      url: req.url,
+    });
+  }
 
   res.json({
-    message: err.message,
-    // Only show stack trace if NOT in production
-    stack: env.NODE_ENV === "production" ? null : err.stack,
+    message:
+      env.NODE_ENV === "production" && statusCode === 500
+        ? "Internal server error"
+        : err.message,
+    stack: env.NODE_ENV === "production" ? undefined : err.stack,
   });
 };

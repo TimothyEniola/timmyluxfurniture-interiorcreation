@@ -29,4 +29,7 @@ export const env = {
   PG_PORT: getEnvNumber("PG_PORT"),
 
   NODE_ENV: getEnv("NODE_ENV", "development"),
+
+  JWT_ACCESS_SECRET: getEnv("JWT_ACCESS_SECRET"),
+  JWT_REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET"),
 };
