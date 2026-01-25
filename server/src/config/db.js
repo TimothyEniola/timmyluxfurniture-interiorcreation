@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { env } from "../config/env.js";
+import { env } from "./env.js";
 
 export const pool = new Pool({
   user: env.PG_USER,

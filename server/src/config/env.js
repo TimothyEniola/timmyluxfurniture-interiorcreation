@@ -27,4 +27,6 @@ export const env = {
   PG_NAME: getEnv("PG_NAME"),
   PG_PASSWORD: getEnv("PG_PASSWORD"),
   PG_PORT: getEnvNumber("PG_PORT"),
+
+  NODE_ENV: getEnv("NODE_ENV", "development"),
 };
