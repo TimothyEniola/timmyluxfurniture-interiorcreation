@@ -26,42 +26,62 @@ export const register = async (email, password) => {
 };
 
 export const login = async (email, password) => {
-  // 1. Find User
   const user = await authRepository.findUserByEmail(email);
-  if (!user) {
+  if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     const error = new Error("Invalid email or password");
     error.statusCode = 401;
     throw error;
   }
 
-  // 2. Compare Password
-  const isMatch = await bcrypt.compare(password, user.password_hash);
-  if (!isMatch) {
-    const error = new Error("Invalid email or password");
-    error.statusCode = 401;
-    throw error;
-  }
-
-  // 3. Generate JWT Access & Refresh Tokens
+  // 1. Generate Access Token (Short lived JWT)
   const accessToken = jwt.sign(
     { id: user.id, email: user.email },
     env.JWT_ACCESS_SECRET,
-    { expiresIn: "15m" },
+    { expiresIn: "15m" }
   );
 
-  const refreshToken = jwt.sign({ id: user.id }, env.JWT_REFRESH_SECRET, {
-    expiresIn: "7d",
-  });
+  // 2. Generate Session ID (Opaque Refresh Token)
+  // This is just a random string, NOT a JWT.
+  const sessionId = crypto.randomUUID();
 
-  // 4. Save Refresh Token in DB (Recommended for security)
-  await authRepository.saveRefreshToken(user.id, refreshToken);
+  // 3. Save Session ID to DB
+  await authRepository.saveRefreshToken(user.id, sessionId);
 
-  return {
-    user: {
-      id: user.id,
-      email: user.email,
-    },
-    accessToken,
-    refreshToken,
-  };
+  return { accessToken, sessionId, user };
 };
+
+export const refresh = async (sessionId) => {
+  // 1. Lookup the Session ID in the DB
+  const storedToken = await authRepository.findRefreshToken(sessionId);
+
+  if (!storedToken) {
+    const error = new Error("Invalid session");
+    error.statusCode = 403; // Forbidden
+    throw error;
+  }
+
+  // 2. Check Expiry
+  if (new Date() > new Date(storedToken.expires_at)) {
+    await authRepository.deleteRefreshToken(sessionId); // Cleanup
+    const error = new Error("Session expired");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  // 3. Generate NEW Access Token
+  const newAccessToken = jwt.sign(
+    { id: storedToken.user_id, email: storedToken.email },
+    env.JWT_ACCESS_SECRET,
+    { expiresIn: "15m" }
+  );
+
+  // Optional: Rotate the Session ID here for maximum security (delete old, issue new)
+
+  return { newAccessToken };
+};
+
+export const logout = async (sessionId) => {
+    if(sessionId) {
+        await authRepository.deleteRefreshToken(sessionId);
+    }
+}

@@ -1,5 +1,4 @@
 import { pool } from "../../config/db.js";
-import { logger } from "../../config/logger.js";
 
 export const findUserByEmail = async (email) => {
   const query = `SELECT * FROM users WHERE email = $1`;
@@ -25,4 +24,20 @@ export const saveRefreshToken = async (userId, token) => {
     VALUES ($1, $2, NOW() + INTERVAL '7 days')
   `;
   await pool.query(query, [userId, token]);
+};
+
+export const findRefreshToken = async (token) => {
+  const query = `
+    SELECT rt.*, u.email 
+    FROM refresh_tokens rt
+    JOlN users u ON rt.user_id = u.id
+    WHERE rt.token = $1 AND rt.is_revoked = FALSE
+  `;
+  const result = await pool.query(query, [token]);
+  return result.rows[0];
+};
+
+export const deleteRefreshToken = async (token) => {
+  const query = `DELETE FROM refresh_tokens WHERE token = $1`;
+  await pool.query(query, [token]);
 };
