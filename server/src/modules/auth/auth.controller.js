@@ -10,9 +10,9 @@ const cookieOptions = {
 
 export const registerUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    const result = await authService.register(email, password);
+    const result = await authService.register(name, email, password);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -27,7 +27,7 @@ export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const result = await authService.login(email, password);
+    const {accessToken, sessionId, user} = await authService.login(email, password);
 
     // Set Cookies
     res.cookie("accessToken", accessToken, {
@@ -41,7 +41,7 @@ export const loginUser = async (req, res, next) => {
 
     res.status(200).json({
       message: "Login successful",
-      data: result,
+      data: user,
     });
   } catch (error) {
     next(error);

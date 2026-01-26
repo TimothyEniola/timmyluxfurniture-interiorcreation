@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { register } from "../api/authService";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,8 +15,9 @@ export default function SignUp() {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -30,9 +31,16 @@ export default function SignUp() {
       return;
     }
 
-    const result = signUp(formData.name, formData.email, formData.password);
-    if (result.success) {
-      navigate("/");
+    setLoading(true);
+    try {
+      // 1. Call Backend
+      await register(formData.name, formData.email, formData.password);
+
+      navigate("/signin");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +52,6 @@ export default function SignUp() {
             <span className="text-white font-bold text-2xl">F</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-          <p className="text-gray-600 mt-2">Join us and get 25% OFF your first order</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -60,13 +67,17 @@ export default function SignUp() {
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
                   type="text"
-                  placeholder="Enter your full name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="input-field pl-10"
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="input-field pl-10 w-full"
                   required
                 />
               </div>
@@ -77,13 +88,17 @@ export default function SignUp() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Mail
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
                   type="email"
-                  placeholder="Enter your email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="input-field pl-10"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="input-field pl-10 w-full"
                   required
                 />
               </div>
@@ -94,19 +109,23 @@ export default function SignUp() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create a password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="input-field pl-10 pr-10"
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  className="input-field pl-10 pr-10 w-full"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -118,55 +137,41 @@ export default function SignUp() {
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
+                  type="password"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="input-field pl-10 pr-10"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                  className="input-field pl-10 pr-10 w-full"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
               </div>
             </div>
 
-            <div className="flex items-start gap-2">
-              <input
-                type="checkbox"
-                className="w-4 h-4 mt-1 text-[#D4AF37] border-gray-300 rounded focus:ring-[#1a5f3a]"
-                required
-              />
-              <span className="text-sm text-gray-600">
-                I agree to the{" "}
-                <a href="#" className="text-[#D4AF37] hover:underline font-medium">
-                  Terms of Service
-                </a>{" "}
-                and{" "}
-                <a href="#" className="text-[#D4AF37] hover:underline font-medium">
-                  Privacy Policy
-                </a>
-              </span>
-            </div>
-
-            <button type="submit" className="btn-primary w-full text-center">
-              Create Account
+            <button
+              disabled={loading}
+              type="submit"
+              className="btn-primary w-full text-center disabled:opacity-50"
+            >
+              {loading ? "Creating..." : "Create Account"}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link to="/signin" className="text-[#D4AF37] hover:underline font-semibold">
-                Sign in
-              </Link>
-            </p>
+            <Link
+              to="/signin"
+              className="text-[#D4AF37] hover:underline font-semibold"
+            >
+              Sign in
+            </Link>
           </div>
         </div>
       </div>
