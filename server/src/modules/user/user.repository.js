@@ -23,18 +23,38 @@ export const updateUserPassword = async (userId, newPasswordHash) => {
 };
 
 export const updateUserProfile = async (userId, updateData) => {
-  const fields = Object.keys(updateData);
-  const values = Object.values(updateData);
+  // Column mapping to handle camelCase -> snake_case and aliases
+  const columnMapping = {
+    profileImage: "profile_image",
+    fullName: "full_name",
+    name: "full_name",
+    phoneNumber: "phone",
+  };
+
+  // 1. Process data to create a clean object with correct DB column names
+  const dbUpdates = {};
+
+  Object.keys(updateData).forEach((key) => {
+    // Map the key to DB column or keep original if no mapping exists
+    const dbKey = columnMapping[key] || key;
+
+    // Assign the value (this naturally handles duplicates by overwriting)
+    dbUpdates[dbKey] = updateData[key];
+  });
+
+  // 2. Remove fields that should not be manually updated or don't exist
+  delete dbUpdates.id;
+  delete dbUpdates.created_at;
+  delete dbUpdates.updated_at;
+  delete dbUpdates.email; // Usually email is handled separately or read-only here
+
+  const fields = Object.keys(dbUpdates);
+  const values = Object.values(dbUpdates);
 
   if (fields.length === 0) return null;
 
-  const dbFields = fields.map((field) => {
-    if (field === "profileImage") return "profile_image";
-    if (field === "fullName" || field === "name") return "full_name";
-    return field;
-  });
-
-  const setClause = dbFields
+  // 3. Construct the Set Clause
+  const setClause = fields
     .map((field, index) => `"${field}" = $${index + 1}`)
     .join(", ");
 

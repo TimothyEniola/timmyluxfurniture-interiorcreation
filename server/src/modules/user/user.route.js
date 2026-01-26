@@ -10,8 +10,11 @@ import {
   getUserWishlist,
   getUserRecommendations,
 } from "./user.controller.js";
+import { verifyUser } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
+
+router.use(verifyUser); // Add authentication middleware here if needed
 
 router.get("/me", getCurrentUser);
 router.put("/me", updateCurrentUser);
