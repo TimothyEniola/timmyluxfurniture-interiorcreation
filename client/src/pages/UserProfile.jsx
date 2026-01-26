@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { User, Mail, Phone, MapPin, Calendar, Camera } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
-import { updateMyProfile } from "../api/userService";
+import { updateMyProfile, getUserAddresses } from "../api/userService"; //
 
 export default function UserProfile() {
   // 1. Get user and actions from Zustand
@@ -10,9 +10,33 @@ export default function UserProfile() {
   
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  
+  // 2. Add state for addresses
+  const [addresses, setAddresses] = useState([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+
   const fileInputRef = useRef(null);
 
-  // 2. Protect the route (Optional: You might handle this in a ProtectedRoute wrapper)
+  // 3. Fetch addresses on component mount
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const response = await getUserAddresses();
+        // Backend returns { data: [...] }, so we access response.data
+        setAddresses(response.data || []); 
+      } catch (error) {
+        console.error("Failed to fetch addresses:", error);
+      } finally {
+        setIsLoadingAddresses(false);
+      }
+    };
+
+    if (user) {
+      fetchAddresses();
+    }
+  }, [user]);
+
+  // 4. Protect the route
   if (!user) {
     return (
       <div className="container-custom py-8">
@@ -30,7 +54,6 @@ export default function UserProfile() {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate file size (e.g., max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       setUploadError("Image size must be less than 2MB");
       return;
@@ -39,19 +62,14 @@ export default function UserProfile() {
     setIsUploading(true);
     setUploadError("");
 
-    // Create a FileReader to show preview immediately (Optimistic UI)
     const reader = new FileReader();
     reader.onload = async (e) => {
       const base64Image = e.target.result;
       
       try {
-        // 3. API Call: Send to backend
-        // Note: You need to implement image upload logic on backend to handle base64 or FormData
-        // For now, we assume the backend accepts a 'profileImage' field in the body
         const response = await updateMyProfile({ profileImage: base64Image });
-        
-        // 4. Update Zustand Store with fresh data from backend
-        setUser(response.data); 
+        // Fix: Ensure we set the correct data structure back to store
+        setUser(response.data || response); 
       } catch (err) {
         console.error("Profile update failed:", err);
         setUploadError("Failed to update profile image. Please try again.");
@@ -150,7 +168,6 @@ export default function UserProfile() {
 
             {/* Account Stats */}
             <div className="space-y-4">
-               {/* Quick Actions / Status Cards */}
                <div className="grid grid-cols-2 gap-4">
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
                     <h3 className="text-xs font-semibold text-blue-800 uppercase tracking-wide mb-1">Status</h3>
@@ -177,18 +194,22 @@ export default function UserProfile() {
 
           <hr className="my-8 border-gray-200" />
 
-          {/* Addresses Section */}
+          {/* Addresses Section - Updated to use local 'addresses' state */}
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-[#011F5B]">Addresses</h3>
-              <button className="text-sm text-[#D4AF37] font-semibold hover:underline">
+              <Link to="/settings" className="text-sm text-[#D4AF37] font-semibold hover:underline">
                 + Add New
-              </button>
+              </Link>
             </div>
             
-            {user.addresses && user.addresses.length > 0 ? (
+            {isLoadingAddresses ? (
+               <div className="text-center py-6">
+                  <p className="text-gray-500 text-sm">Loading addresses...</p>
+               </div>
+            ) : addresses && addresses.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {user.addresses.map((addr, index) => (
+                {addresses.map((addr, index) => (
                   <div key={index} className="bg-white border border-gray-200 p-4 rounded-lg hover:border-[#D4AF37] transition-colors group">
                     <div className="flex items-start gap-3">
                       <MapPin className="text-gray-400 group-hover:text-[#D4AF37] mt-1" size={18} />
@@ -196,7 +217,9 @@ export default function UserProfile() {
                         <h4 className="font-medium text-[#011F5B] mb-1">
                           {index === 0 ? 'Main Address' : `Address ${index + 1}`}
                         </h4>
-                        <p className="text-sm text-gray-600">{addr.houseNumber ? `House ${addr.houseNumber}, ` : ''}{addr.street}</p>
+                        <p className="text-sm text-gray-600">
+                          {[addr.houseNumber ? `House ${addr.houseNumber}` : '', addr.street].filter(Boolean).join(', ')}
+                        </p>
                         <p className="text-sm text-gray-600">{addr.lga}, {addr.state}</p>
                       </div>
                     </div>

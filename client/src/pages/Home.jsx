@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import Loader from "../components/Loader";
+import Loader from "../components/loader";
 import {
   Package,
   CreditCard,
@@ -9,11 +9,11 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
-// import { useProducts } from "../context/ProductContext";
+import { products } from "../data/Products";
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const { products } = useProducts();
+  // const { products } = useProducts();
   const featuredProducts = products.filter((p) => p.featured);
   const [activeTab, setActiveTab] = useState("all");
   const [currentSlide, setCurrentSlide] = useState(0);

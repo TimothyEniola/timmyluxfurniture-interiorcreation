@@ -1,6 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-// import { useCart } from "../context/CartContext";
-// import { useWishlist } from "../context/WishlistContext";
 import { useAuthStore } from "../store/authStore"; // 1. Import Zustand Store
 import { logout as apiLogout } from "../api/authService"; // 2. Import API Logout
 import { ShoppingCart, Menu, X, Search, Heart, User } from "lucide-react";
@@ -9,8 +7,6 @@ import logo from "../assets/reallogo-removebg-preview.png";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { getCartCount } = useCart();
-  const { getWishlistCount } = useWishlist();
   
   // 3. Use Zustand for state
   const { user, logout: clearAuth } = useAuthStore();
@@ -121,22 +117,14 @@ export default function Navbar() {
               className="hover:text-[#D4AF37] transition-colors relative"
               aria-label="Wishlist">
               <Heart size={20} />
-              {getWishlistCount() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-[#011F5B] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {getWishlistCount()}
-                </span>
-              )}
+              2
             </Link>
             <Link
               to="/cart"
               className="hover:text-[#D4AF37] transition-colors relative"
               aria-label="Cart">
               <ShoppingCart size={20} />
-              {getCartCount() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-[#011F5B] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {getCartCount()}
-                </span>
-              )}
+              2
             </Link>
             {isAuthenticated ? (
               <div className="relative group">
@@ -233,13 +221,13 @@ export default function Navbar() {
               to="/cart"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
               onClick={() => setMobileMenuOpen(false)}>
-              Cart ({getCartCount()})
+              Cart (2)
             </Link>
             <Link
               to="/wishlist"
               className="block hover:text-[#D4AF37] transition-colors font-medium"
               onClick={() => setMobileMenuOpen(false)}>
-              Wishlist ({getWishlistCount()})
+              Wishlist (2)
             </Link>
             {isAuthenticated ? (
               <>

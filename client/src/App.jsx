@@ -4,6 +4,7 @@ import { useAuthStore } from "./store/authStore";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
 import AdminNavbar from "./components/AdminNavbar";
@@ -52,21 +53,21 @@ function AppContent() {
           <Route path="/products" element={<Products />} />
           <Route path="/about" element={<About />} />
 
-          {/* === PROTECTED ROUTES === */}
+          {/* === USER PROTECTED ROUTES === */}
           <Route element={<ProtectedRoute />}>
             <Route path="/cart" element={<Cart />} />
-            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<Checkout />} />
-
-            {/* User Routes */}
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/settings" element={<UserSettings />} />
             <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/custom-request" element={<CustomRequest />} />
+          </Route>
 
-            {/* Admin Routes */}
+          {/* ADMIN PROTECTED ROUTE */}
+          <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/add-product" element={<AdminAddProduct />} />

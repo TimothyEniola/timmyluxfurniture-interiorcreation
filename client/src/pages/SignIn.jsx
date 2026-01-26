@@ -19,9 +19,12 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await login(formData.email, formData.password);
+
+      console.log("Login response:", response);
       setUser(response.data);
 
       navigate("/");
