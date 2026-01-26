@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import Loader from "../components/Loader";
 import {
   Package,
   CreditCard,
@@ -8,7 +9,7 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
-import { useProducts } from "../context/ProductContext";
+// import { useProducts } from "../context/ProductContext";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -64,6 +65,16 @@ export default function Home() {
         return products.slice(0, 6);
     }
   };
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loader text="Loading luxury furniture..." />;
+  }
 
   return (
     <div>
@@ -267,8 +278,7 @@ export default function Home() {
                   </ul>
                   <button
                     onClick={() => setChairsExpanded(!chairsExpanded)}
-                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
-                  >
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline">
                     {chairsExpanded ? "Read Less" : "Read More"}
                   </button>
                 </div>
@@ -302,8 +312,7 @@ export default function Home() {
                   </ul>
                   <button
                     onClick={() => setSofaExpanded(!sofaExpanded)}
-                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
-                  >
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline">
                     {sofaExpanded ? "Read Less" : "Read More"}
                   </button>
                 </div>
@@ -337,8 +346,7 @@ export default function Home() {
                   </ul>
                   <button
                     onClick={() => setLightingExpanded(!lightingExpanded)}
-                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline"
-                  >
+                    className="text-[#D4AF37] font-semibold text-sm mt-2 hover:underline">
                     {lightingExpanded ? "Read Less" : "Read More"}
                   </button>
                 </div>

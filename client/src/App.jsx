@@ -20,11 +20,11 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import CustomRequest from "./pages/CustomRequest";
 import Notifications from "./pages/Notifications";
-import { CartProvider } from "./context/CartContext";
-import { ProductProvider } from "./context/ProductContext";
-import { AuthProvider } from "./context/AuthContext";
-import { WishlistProvider } from "./context/WishlistContext";
-import { NotificationProvider } from "./context/NotificationContext";
+// import { CartProvider } from "./context/CartContext";
+// import { ProductProvider } from "./context/ProductContext";
+// import { AuthProvider } from "./context/AuthContext";
+// import { WishlistProvider } from "./context/WishlistContext";
+// import { NotificationProvider } from "./context/NotificationContext";
 import About from "./pages/About";
 function AppContent() {
   const location = useLocation();

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
+// import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, CreditCard, Truck } from "lucide-react";
 import { usePaystack } from "../hooks/usePaystack";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 
 export default function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();

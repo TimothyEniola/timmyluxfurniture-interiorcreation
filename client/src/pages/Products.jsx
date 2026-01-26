@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { categories } from "../data/Products";
-import { useProducts } from "../context/ProductContext";
+// import { useProducts } from "../context/ProductContext";
 
 export default function Products() {
   const { products } = useProducts();

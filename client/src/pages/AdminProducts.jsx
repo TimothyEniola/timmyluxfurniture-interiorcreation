@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useProducts } from "../context/ProductContext";
+// import { useProducts } from "../context/ProductContext";
 import { Plus, Edit, Trash2 } from "lucide-react";
 
 export default function AdminProducts() {

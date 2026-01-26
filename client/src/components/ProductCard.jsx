@@ -1,5 +1,5 @@
-import { useCart } from "../context/CartContext";
-import { useWishlist } from "../context/WishlistContext";
+// import { useCart } from "../context/CartContext";
+// import { useWishlist } from "../context/WishlistContext";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
