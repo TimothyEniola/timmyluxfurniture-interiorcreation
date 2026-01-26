@@ -1,29 +1,46 @@
-import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useWishlist } from "../context/WishlistContext";
-import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+// import { useCart } from "../context/CartContext";
+// import { useWishlist } from "../context/WishlistContext";
+import { useAuthStore } from "../store/authStore"; // 1. Import Zustand Store
+import { logout as apiLogout } from "../api/authService"; // 2. Import API Logout
 import { ShoppingCart, Menu, X, Search, Heart, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "../assets/reallogo-removebg-preview.png";
+
 export default function Navbar() {
+  const navigate = useNavigate();
   const { getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
-  const { user, isAuthenticated, signOut } = useAuth();
+  
+  // 3. Use Zustand for state
+  const { user, logout: clearAuth } = useAuthStore();
+  const isAuthenticated = !!user; // Derive auth state
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // 4. Create a proper Sign Out handler
+  const handleSignOut = async () => {
+    try {
+      await apiLogout(); // Call backend to clear cookies
+      clearAuth();       // Clear frontend state
+      setMobileMenuOpen(false); 
+      navigate("/signin");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to products page with search query
       window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
       setSearchOpen(false);
       setSearchQuery("");
     }
   };
 
-  // Close search dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchOpen && !event.target.closest(".search-container")) {
@@ -57,11 +74,6 @@ export default function Navbar() {
               className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
               Shop
             </Link>
-            {/* <div className="relative group">
-              <button className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
-                Categories
-              </button>
-            </div> */}
             <Link
               to="/custom-request"
               className="hover:text-[#D4AF37] transition-colors duration-300 font-medium">
@@ -166,7 +178,7 @@ export default function Navbar() {
                     Track Order
                   </Link>
                   <button
-                    onClick={signOut}
+                    onClick={handleSignOut}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors">
                     Sign Out
                   </button>
@@ -277,10 +289,7 @@ export default function Navbar() {
                   Track Order
                 </Link>
                 <button
-                  onClick={() => {
-                    signOut();
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={handleSignOut}
                   className="block w-full text-left hover:text-[#D4AF37] transition-colors font-medium">
                   Sign Out ({user?.name})
                 </button>

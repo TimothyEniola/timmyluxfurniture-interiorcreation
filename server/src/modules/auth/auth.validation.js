@@ -1,6 +1,10 @@
 import Joi from "joi";
 
 export const registerSchema = Joi.object({
+  name: Joi.string().max(100).required().messages({
+    "any.required": "Name is required",
+    "string.max": "Name cannot exceed 100 characters",
+  }),
   email: Joi.string().email().required().messages({
     "string.email": "Please provide a valid email address",
     "any.required": "Email is required",

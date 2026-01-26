@@ -22,6 +22,39 @@ export const updateCurrentUser = async (req, res, next) => {
   }
 };
 
+export const updateCurrentUserPassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    await userService.changePassword(req.user.id, currentPassword, newPassword);
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// IMPLEMENTED
+export const addUserAddress = async (req, res, next) => {
+  try {
+    const address = await userService.addAddress(req.user.id, req.body);
+    res.status(201).json({ 
+        message: "Address added successfully", 
+        data: address 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// IMPLEMENTED
+export const getUserAddresses = async (req, res, next) => {
+  try {
+    const addresses = await userService.getAddresses(req.user.id);
+    res.status(200).json({ data: addresses });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getUserRecommendations = async (req, res, next) => {
   try {
     const recommendations = await userService.getRecommendations(req.user.id);
@@ -30,12 +63,6 @@ export const getUserRecommendations = async (req, res, next) => {
     next(error);
   }
 };
-
-export const updateCurrentUserPassword = async (req, res, next) => {};
-
-export const getUserAddresses = async (req, res, next) => {};
-
-export const addUserAddress = async (req, res, next) => {};
 
 export const getUserOrders = async (req, res, next) => {};
 

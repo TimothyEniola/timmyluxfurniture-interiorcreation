@@ -6,13 +6,13 @@ export const findUserByEmail = async (email) => {
   return result.rows[0];
 };
 
-export const createUser = async (email, passwordHash) => {
+export const createUser = async (name, email, passwordHash) => {
   const query = `
-    INSERT INTO users (email, password_hash)
-    VALUES ($1, $2)
+    INSERT INTO users (full_name, email, password_hash)
+    VALUES ($1, $2, $3)
     RETURNING id, email, created_at
   `;
-  const result = await pool.query(query, [email, passwordHash]);
+  const result = await pool.query(query, [name, email, passwordHash]);
   return result.rows[0];
 };
 

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
 import * as authRepository from "./auth.repository.js";
 
-export const register = async (email, password) => {
+export const register = async (name, email, password) => {
   // 1. Business Logic: Check if user already exists
   const existingUser = await authRepository.findUserByEmail(email);
   if (existingUser) {
@@ -17,7 +17,7 @@ export const register = async (email, password) => {
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
   // 3. Data Access: Create the user
-  const newUser = await authRepository.createUser(email, passwordHash);
+  const newUser = await authRepository.createUser(name, email, passwordHash);
 
   // 4. Business Logic: Generate Tokens (Optional: or do this only at login)
   // const token = generateToken(newUser.id);

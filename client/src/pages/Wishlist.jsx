@@ -1,5 +1,5 @@
-import { useWishlist } from "../context/WishlistContext";
-import { useCart } from "../context/CartContext";
+// import { useWishlist } from "../context/WishlistContext";
+// import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 
@@ -41,8 +41,7 @@ export default function Wishlist() {
           {wishlist.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow"
-            >
+              className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative">
                 <img
                   src={product.image}
@@ -52,8 +51,7 @@ export default function Wishlist() {
                 <button
                   onClick={() => removeFromWishlist(product.id)}
                   className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-red-50 transition"
-                  aria-label="Remove from wishlist"
-                >
+                  aria-label="Remove from wishlist">
                   <Heart size={16} className="text-red-500 fill-current" />
                 </button>
               </div>
@@ -67,8 +65,7 @@ export default function Wishlist() {
                 </p>
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="btn-secondary w-full flex items-center justify-center gap-2"
-                >
+                  className="btn-secondary w-full flex items-center justify-center gap-2">
                   <ShoppingCart size={16} />
                   Add to Cart
                 </button>
@@ -78,10 +75,7 @@ export default function Wishlist() {
         </div>
 
         <div className="text-center mt-8">
-          <Link
-            to="/products"
-            className="btn-primary"
-          >
+          <Link to="/products" className="btn-primary">
             Continue Shopping
           </Link>
         </div>
