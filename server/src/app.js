@@ -8,6 +8,7 @@ import authRoutes from "./modules/auth/auth.route.js";
 import userRoutes from "./modules/user/user.route.js";
 import productRoutes from "./modules/products/product.route.js";
 import cartRoutes from "./modules/cart/cart.route.js";
+import wishlistRoutes from "./modules/wishlist/wishlist.route.js";
 import {
   globalErrorHandler,
   notFoundHandler,
@@ -31,6 +32,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/wishlist", wishlistRoutes);
 
 
 app.use(notFoundHandler);

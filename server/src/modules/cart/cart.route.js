@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { getCart, addToCart, updateCartItem, removeCartItem } from "./cart.controller.js";
-import { authenticate } from "../../middlewares/auth.middleware.js";
+import { verifyUser } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.use(authenticate); // All cart routes require login
+router.use(verifyUser); // All cart routes require login
 
 router.get("/", getCart);
 router.post("/", addToCart);

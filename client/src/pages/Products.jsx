@@ -1,21 +1,29 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { categories } from "../data/Products";
-// import { useProducts } from "../context/ProductContext";
+import { categories } from "../data/Products"; // Keep categories static or fetch from DB if you made an endpoint
+import { useProductStore } from "../store/productStore";
+import Loader from "../components/loader";
 
 export default function Products() {
-  const { products } = useProducts();
+  const { products, fetchProducts, isLoading } = useProductStore();
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Fetch products on mount
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
   // Get search query from URL parameters
   useEffect(() => {
     const searchParam = searchParams.get('search');
+    const categoryParam = searchParams.get('category');
     if (searchParam) {
       setSearchQuery(searchParam);
     }
+    if (categoryParam) setSelectedCategory(categoryParam);
   }, [searchParams]);
 
   // Update URL when search query changes
@@ -28,7 +36,9 @@ export default function Products() {
     }
   }, [searchQuery]);
 
-  // Filter products based on category and search query
+  if (isLoading && products.length === 0) return <Loader text="Loading collection..." />;
+
+  // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
     const matchesSearch = !searchQuery || 

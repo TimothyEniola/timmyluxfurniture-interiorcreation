@@ -1,9 +1,18 @@
-// import { useCart } from "../context/CartContext";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { useCartStore } from "../store/cartStore";
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { cart, fetchCart, removeFromCart, updateQuantity, getCartTotal, isLoading } = useCartStore();
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  if (isLoading && cart.length === 0) {
+    return <div className="py-20 text-center">Loading cart...</div>;
+  }
 
   if (cart.length === 0) {
     return (
@@ -34,7 +43,7 @@ export default function Cart() {
           <div className="lg:col-span-2 space-y-4">
             {cart.map((item) => (
               <div
-                key={item.id}
+                key={item.id} // This is the cart_item id
                 className="bg-white rounded-xl shadow-sm p-4 flex flex-col sm:flex-row gap-4"
               >
                 <img
@@ -48,7 +57,7 @@ export default function Cart() {
                   </h3>
                   <p className="text-sm text-gray-500 mb-2">{item.category}</p>
                   <p className="text-xl font-bold text-[#D4AF37] mb-3">
-                    ₦{item.price.toLocaleString()}
+                    ₦{Number(item.price).toLocaleString()}
                   </p>
 
                   <div className="flex items-center gap-4">
