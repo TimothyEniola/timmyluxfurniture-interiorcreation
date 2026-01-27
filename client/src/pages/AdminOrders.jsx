@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { useAuth } from "../context/AuthContext";
 
 export default function AdminOrders() {
   const { updateOrderStatus: updateUserOrderStatus } = useAuth();
